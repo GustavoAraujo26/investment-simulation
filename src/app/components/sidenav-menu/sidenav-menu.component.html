@@ -1,0 +1,20 @@
+<mat-nav-list>
+  @for (menuItem of menuItems; track menuItem; let menuIndex = $index) {
+    <mat-list-item [activated]="menuItem.isActive" (click)="menuGo(menuItem.id, menuIndex)">
+      <mat-icon class="parent-menu-icon" [fontIcon]="menuItem.icon"></mat-icon>
+      {{ menuItem.text }}
+      <div class="sub-menu-icon-container" *ngIf="menuItem.subItems.length > 0">
+        <mat-icon class="parent-menu-icon" fontIcon="arrow_drop_down" *ngIf="!menuItem.isActive"></mat-icon>
+        <mat-icon class="parent-menu-icon" fontIcon="arrow_drop_up" *ngIf="menuItem.isActive"></mat-icon>
+      </div>
+    </mat-list-item>
+    <mat-nav-list class="sub-menu-list" *ngIf="menuItem.isActive && menuItem.subItems.length > 0">
+      @for (subMenu of menuItem.subItems; track subMenu; let submenuIndex = $index){
+        <mat-list-item [activated]="subMenu.isActive" (click)="subMenuGo(subMenu.id, menuItem.id, submenuIndex, menuIndex)">
+          <mat-icon class="parent-menu-icon" [fontIcon]="subMenu.icon"></mat-icon>
+          {{ menuItem.text }}
+        </mat-list-item>
+      }
+    </mat-nav-list>
+  }
+</mat-nav-list>
