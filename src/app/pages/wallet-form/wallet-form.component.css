@@ -18,3 +18,12 @@
 .clear-grid-tile-padding {
   padding: 0;
 }
+
+.wallet-build-card {
+  overflow: auto;
+  max-width: 400px;
+}
+
+.text-left {
+  text-align: left;
+}

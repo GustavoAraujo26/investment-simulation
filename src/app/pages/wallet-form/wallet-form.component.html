@@ -31,95 +31,81 @@
     </mat-form-field>
   </mat-card-content>
 </mat-card>
-<br>
-<mat-grid-list class="clear-grid-tile-padding" cols="2">
-  <mat-grid-tile>
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Seleção de Ativos</mat-card-title>
+        <mat-card-title style="vertical-align: center; margin-bottom: 5px;">
+          Seleção de Ativos
+          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
+          <mat-divider class="global-divider"></mat-divider>
+          <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col">
+              <mat-list>
+                <mat-list-item>
+                  <div matListItemIcon>
+                    <img alt="row.name" class="option-stock-img" [src]="selectedStock.logo" height="50"/>
+                  </div>
+                  <div matListItemTitle>{{selectedStock.code}}</div>
+                  <div matListItemLine>{{selectedStock.name}}</div>
+                </mat-list-item>
+              </mat-list>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <mat-list>
+                <mat-list-item>
+                  <div matListItemTitle>{{selectedStock.type}}</div>
+                  <div matListItemLine>{{selectedStock.sector}}</div>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+          <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--6-col">
+              <mat-form-field class="full-width">
+                <mat-label>Último Preço</mat-label>
+                <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" disabled [value]="selectedStock.price"/>
+              </mat-form-field>
+            </div>
+            <div class="mdl-cell mdl-cell--6-col">
+              <mat-form-field class="full-width">
+                <mat-label>Peso (%)</mat-label>
+                <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" max="100"/>
+              </mat-form-field>
+            </div>
+          </div>
+          <mat-divider class="global-divider"></mat-divider>
+        </div>
+      </mat-card-content>
+      <mat-card-actions style="justify-content: right;" *ngIf="selectedStock !== null && selectedStock !== undefined">
+        <button mat-flat-button>Limpar</button>&nbsp;
+        <button mat-flat-button color="accent">Inserir</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="mdl-cell mdl-cell--6-col">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Composição da Carteira</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-divider class="global-divider"></mat-divider>
-        <div class="stock-selection-button-container">
-          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
-            <mat-icon>check_circle</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
-          <mat-list>
-            <mat-list-item>
-              <div matListItemIcon>
-                <img alt="row.name" class="option-stock-img" [src]="selectedStock.logo" height="50"/>
-              </div>
-              <div matListItemTitle>{{selectedStock.code}}</div>
-              <div matListItemLine>{{selectedStock.name}}</div>
-            </mat-list-item>
-          </mat-list>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <mat-form-field class="full-width">
-                    <mat-label>Preço</mat-label>
-                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" disabled [value]="selectedStock.price"/>
-                  </mat-form-field>
-                </td>
-                <td style="vertical-align: middle;">
-                  <mat-form-field class="full-width">
-                    <mat-label>Peso (%)</mat-label>
-                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" max="100"/>
-                  </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Seleção de Ativos</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-divider class="global-divider"></mat-divider>
-        <div class="stock-selection-button-container">
-          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
-            <mat-icon>check_circle</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
-          <mat-list>
-            <mat-list-item>
-              <div matListItemIcon>
-                <img alt="row.name" class="option-stock-img" [src]="selectedStock.logo" height="50"/>
-              </div>
-              <div matListItemTitle>{{selectedStock.code}}</div>
-              <div matListItemLine>{{selectedStock.name}}</div>
-            </mat-list-item>
-          </mat-list>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <mat-form-field class="full-width">
-                    <mat-label>Preço</mat-label>
-                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" disabled [value]="selectedStock.price"/>
-                  </mat-form-field>
-                </td>
-                <td style="vertical-align: middle;">
-                  <mat-form-field class="full-width">
-                    <mat-label>Peso (%)</mat-label>
-                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" max="100"/>
-                  </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
+        <div class="wallet-build-card">
 
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div style="text-align: center;">
+  <button mat-fab extended color="primary">
+    <mat-icon>save</mat-icon>
+    Salvar
+  </button>
+</div>
