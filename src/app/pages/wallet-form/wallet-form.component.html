@@ -32,46 +32,94 @@
   </mat-card-content>
 </mat-card>
 <br>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Seleção de Ativos</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-divider class="global-divider"></mat-divider>
-    <table class="full-width" cellspacing="0">
-      <tbody>
-        <tr>
-          <td>
-            <mat-form-field class="full-width">
-              <mat-label>Ação/Fundo/BDR</mat-label>
-              <input matInput aria-label="Ação/Fundo/BDR" [matAutocomplete]="auto" [formControl]="stockCtrl" />
-              <mat-autocomplete #auto="matAutocomplete">
-                @for(stock of filteredStocks | async; track stock) {
-                  <mat-option [value]="stock.code">
-                    <table class="full-width">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <img alt="stock.name" class="option-stock-img" [src]="stock.logo" height="25" />
-                          </td>
-                          <td>
-                            <span>{{ stock.code }}</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2">
-                            <small class="option-stock-name">{{ stock.name }}</small>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </mat-card-content>
-</mat-card>
+<mat-grid-list class="clear-grid-tile-padding" cols="2">
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Seleção de Ativos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider class="global-divider"></mat-divider>
+        <div class="stock-selection-button-container">
+          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
+          <mat-list>
+            <mat-list-item>
+              <div matListItemIcon>
+                <img alt="row.name" class="option-stock-img" [src]="selectedStock.logo" height="50"/>
+              </div>
+              <div matListItemTitle>{{selectedStock.code}}</div>
+              <div matListItemLine>{{selectedStock.name}}</div>
+            </mat-list-item>
+          </mat-list>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <mat-form-field class="full-width">
+                    <mat-label>Preço</mat-label>
+                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" disabled [value]="selectedStock.price"/>
+                  </mat-form-field>
+                </td>
+                <td style="vertical-align: middle;">
+                  <mat-form-field class="full-width">
+                    <mat-label>Peso (%)</mat-label>
+                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" max="100"/>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Seleção de Ativos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider class="global-divider"></mat-divider>
+        <div class="stock-selection-button-container">
+          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
+          <mat-list>
+            <mat-list-item>
+              <div matListItemIcon>
+                <img alt="row.name" class="option-stock-img" [src]="selectedStock.logo" height="50"/>
+              </div>
+              <div matListItemTitle>{{selectedStock.code}}</div>
+              <div matListItemLine>{{selectedStock.name}}</div>
+            </mat-list-item>
+          </mat-list>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <mat-form-field class="full-width">
+                    <mat-label>Preço</mat-label>
+                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" disabled [value]="selectedStock.price"/>
+                  </mat-form-field>
+                </td>
+                <td style="vertical-align: middle;">
+                  <mat-form-field class="full-width">
+                    <mat-label>Peso (%)</mat-label>
+                    <input type="number" matInput placeholder="Ex.: 50.00" step="0.01" min="0" max="100"/>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+

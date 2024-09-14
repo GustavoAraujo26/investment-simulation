@@ -1,0 +1,9 @@
+.option-stock-img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.option-stock-name {
+  font-style: italic;
+  font-weight: lighter;
+}

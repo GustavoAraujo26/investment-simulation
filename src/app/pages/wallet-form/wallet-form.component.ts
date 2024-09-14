@@ -14,6 +14,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import {AsyncPipe, CommonModule} from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { StockSelectionDialogComponent } from '../../components/stock-selection-dialog/stock-selection-dialog.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
 
 @Component({
   selector: 'app-wallet-form',
@@ -30,7 +35,10 @@ import {AsyncPipe, CommonModule} from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    AsyncPipe
+    AsyncPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule
   ],
   standalone: true
 })
@@ -39,6 +47,7 @@ export class WalletFormComponent implements OnInit {
   isEdition: boolean = false;
   id: string | null = null;
   title: string = '';
+  selectedStock: OptionStock | null = null;
   stockCtrl = new FormControl('');
   filteredStocks: Observable<OptionStock[]>;
   optionStocks: OptionStock[] = [
@@ -76,7 +85,9 @@ export class WalletFormComponent implements OnInit {
     }
   ];
 
-  constructor(private route: ActivatedRoute, private store: Store<AppState>) {
+  constructor(private route: ActivatedRoute, private store: Store<AppState>,
+    public dialog: MatDialog
+  ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
 
@@ -108,5 +119,13 @@ export class WalletFormComponent implements OnInit {
 
     return this.optionStocks.filter(stock => stock.name.toLowerCase().includes(filterValue) ||
       stock.code.toLowerCase().includes(filterValue));
+  }
+
+  openStockSelectionDialog() {
+    const dialogRef = this.dialog.open(StockSelectionDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectedStock = result;
+    });
   }
 }
