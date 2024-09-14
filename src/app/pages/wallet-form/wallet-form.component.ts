@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
@@ -11,14 +11,81 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { OptionStock } from '../../models/option-stock';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { StockSelectionDialogComponent } from '../../components/stock-selection-dialog/stock-selection-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
+import { WalletStock } from '../../models/wallet-stock';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+
+const ELEMENT_DATA: WalletStock[] = [
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'GDBR34',
+    name: 'GEN DYNAMICSDRN',
+    logo: 'https://s3-symbol-logo.tradingview.com/general-dynamics--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'BCPX39',
+    name: 'GX COPPER MNDRE',
+    logo: 'https://s3-symbol-logo.tradingview.com/global-x--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'SHOP11',
+    name: 'FII MULTSHOPCI',
+    logo: 'https://brapi.dev/favicon.svg',
+    percentage: 10
+  },
+  {
+    code: 'P1NR34',
+    name: 'PENTAIR PLC DRN',
+    logo: 'https://s3-symbol-logo.tradingview.com/pentair--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+  {
+    code: 'MRSA3BF',
+    name: 'MRS LOGISTICA',
+    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
+    percentage: 10
+  },
+];
 
 @Component({
   selector: 'app-wallet-form',
@@ -38,67 +105,37 @@ import {MatListModule} from '@angular/material/list';
     AsyncPipe,
     MatButtonModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatTooltipModule
   ],
   standalone: true
 })
-export class WalletFormComponent implements OnInit {
+export class WalletFormComponent implements AfterViewInit {
+  displayedColumns = ['code', 'percentage', 'actions'];
+  dataSource: MatTableDataSource<WalletStock>;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   isEdition: boolean = false;
   id: string | null = null;
   title: string = '';
   selectedStock: OptionStock | null = null;
-  stockCtrl = new FormControl('');
-  filteredStocks: Observable<OptionStock[]>;
-  optionStocks: OptionStock[] = [
-    {
-      code: 'FNAM11',
-      name: 'FINAM CI *',
-      price: 0.46,
-      logo: 'https://s3-symbol-logo.tradingview.com/amazonia-on-es--big.svg',
-      sector: 'Teste',
-      type: 'Ação'
-    },
-    {
-      code: 'B3SA3',
-      name: 'B3',
-      price: 12.13,
-      logo: 'https://s3-symbol-logo.tradingview.com/b3-on-nm--big.svg',
-      sector: 'Teste',
-      type: 'Ação'
-    },
-    {
-      code: 'AZUL4',
-      name: 'AZUL PN',
-      price: 4.95,
-      logo: 'https://s3-symbol-logo.tradingview.com/azul--big.svg',
-      sector: 'Teste',
-      type: 'Ação'
-    },
-    {
-      code: 'CVCB3',
-      name: 'CVC BRASIL',
-      price: 2.08,
-      logo: 'https://s3-symbol-logo.tradingview.com/cvc-brasil-on-nm--big.svg',
-      sector: 'Teste',
-      type: 'Ação'
-    }
-  ];
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
     public dialog: MatDialog
   ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
-
-    this.filteredStocks = this.stockCtrl.valueChanges.pipe(
-      startWith(''),
-      map(stock => (stock ? this._filteredStocks(stock) : this.optionStocks.slice()))
-    );
+    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
   }
 
-  ngOnInit() {
-
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   getCurrentId(){
@@ -114,18 +151,17 @@ export class WalletFormComponent implements OnInit {
     }
   }
 
-  private _filteredStocks(value: string): OptionStock[] {
-    const filterValue = value.toLowerCase();
-
-    return this.optionStocks.filter(stock => stock.name.toLowerCase().includes(filterValue) ||
-      stock.code.toLowerCase().includes(filterValue));
-  }
-
   openStockSelectionDialog() {
     const dialogRef = this.dialog.open(StockSelectionDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.selectedStock = result;
+      if (result !== null && result !== undefined && result !== ''){
+        this.selectedStock = result;
+      }
     });
+  }
+
+  clearSelectedStock() {
+    this.selectedStock = null;
   }
 }

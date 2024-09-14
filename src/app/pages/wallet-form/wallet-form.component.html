@@ -37,7 +37,7 @@
       <mat-card-header>
         <mat-card-title style="vertical-align: center; margin-bottom: 5px;">
           Seleção de Ativos
-          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()">
+          <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()" matTooltip="Selecionar ativo para a carteira">
             <mat-icon>add</mat-icon>
           </button>
         </mat-card-title>
@@ -84,7 +84,7 @@
         </div>
       </mat-card-content>
       <mat-card-actions style="justify-content: right;" *ngIf="selectedStock !== null && selectedStock !== undefined">
-        <button mat-flat-button>Limpar</button>&nbsp;
+        <button mat-flat-button (click)="clearSelectedStock()">Limpar</button>&nbsp;
         <button mat-flat-button color="accent">Inserir</button>
       </mat-card-actions>
     </mat-card>
@@ -96,9 +96,49 @@
       </mat-card-header>
       <mat-card-content>
         <mat-divider class="global-divider"></mat-divider>
-        <div class="wallet-build-card">
+        <section class="wallet-container" tabindex="0">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-list>
+                  <mat-list-item>
+                    <div matListItemIcon>
+                      <img alt="row.name" class="option-stock-img" [src]="row.logo" height="25"/>
+                    </div>
+                    <div matListItemTitle>{{row.code}}</div>
+                    <div matListItemLine>{{row.name}}</div>
+                  </mat-list-item>
+                </mat-list>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="percentage">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentagem</th>
+              <td mat-cell *matCellDef="let row">
+                {{row.percentage / 100 | percent}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-mini-fab color="accent" aria-label="Editar ativo" matTooltip="Editar do ativo da carteira">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                &nbsp;
+                <button mat-mini-fab color="warn" aria-label="Apagar ativo" matTooltip="Apagar ativo da carteira">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        </div>
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="3">Nenhum ativo encontrado!</td>
+            </tr>
+          </table>
+        </section>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
       </mat-card-content>
     </mat-card>
   </div>

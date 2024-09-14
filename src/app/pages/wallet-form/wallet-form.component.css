@@ -27,3 +27,12 @@
 .text-left {
   text-align: left;
 }
+
+table {
+  width: 100%;
+}
+
+.wallet-container {
+  height: 400px;
+  overflow: auto;
+}

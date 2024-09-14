@@ -7,3 +7,12 @@
   font-style: italic;
   font-weight: lighter;
 }
+
+table {
+  width: 100%;
+}
+
+.stock-container {
+  height: 400px;
+  overflow: auto;
+}
