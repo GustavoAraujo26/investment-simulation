@@ -42,7 +42,33 @@
       <tbody>
         <tr>
           <td>
-
+            <mat-form-field class="full-width">
+              <mat-label>Ação/Fundo/BDR</mat-label>
+              <input matInput aria-label="Ação/Fundo/BDR" [matAutocomplete]="auto" [formControl]="stockCtrl" />
+              <mat-autocomplete #auto="matAutocomplete">
+                @for(stock of filteredStocks | async; track stock) {
+                  <mat-option [value]="stock.code">
+                    <table class="full-width">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <img alt="stock.name" class="option-stock-img" [src]="stock.logo" height="25" />
+                          </td>
+                          <td>
+                            <span>{{ stock.code }}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <small class="option-stock-name">{{ stock.name }}</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
           </td>
         </tr>
       </tbody>
