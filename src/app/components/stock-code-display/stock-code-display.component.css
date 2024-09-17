@@ -1,0 +1,13 @@
+.stock-img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.stock-name {
+  font-style: italic;
+  font-weight: lighter;
+}
+
+.stock-code {
+  font-weight: bold;
+}

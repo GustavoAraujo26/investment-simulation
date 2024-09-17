@@ -17,12 +17,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { StockSelectionDialogComponent } from '../../components/stock-selection-dialog/stock-selection-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
 import { WalletStock } from '../../models/wallet-stock';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { StockCodeDisplayComponent } from '../../components/stock-code-display/stock-code-display.component';
+import { MatListModule } from '@angular/material/list';
+import { SaveButtonComponent } from '../../components/save-button/save-button.component';
+import { TableActionsComponent } from '../../components/table-actions/table-actions.component';
 
 const ELEMENT_DATA: WalletStock[] = [
   {
@@ -109,7 +112,10 @@ const ELEMENT_DATA: WalletStock[] = [
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    StockCodeDisplayComponent,
+    SaveButtonComponent,
+    TableActionsComponent
   ],
   standalone: true
 })
@@ -163,5 +169,20 @@ export class WalletFormComponent implements AfterViewInit {
 
   clearSelectedStock() {
     this.selectedStock = null;
+  }
+
+  onSaveWallet() {
+    debugger;
+    alert('Success');
+  }
+
+  editSelectedStock(code: string) {
+    debugger;
+    alert(code);
+  }
+
+  deleteSelectedStock(code: string) {
+    debugger;
+    alert(code);
   }
 }
