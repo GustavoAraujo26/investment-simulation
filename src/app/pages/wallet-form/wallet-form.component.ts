@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StockSelectionDialogComponent } from '../../components/stock-selection-dialog/stock-selection-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import { WalletStock } from '../../models/wallet-stock';
+import { WalletStock } from '../../models/wallet/wallet-stock';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -172,17 +172,14 @@ export class WalletFormComponent implements AfterViewInit {
   }
 
   onSaveWallet() {
-    debugger;
     alert('Success');
   }
 
   editSelectedStock(code: string) {
-    debugger;
     alert(code);
   }
 
   deleteSelectedStock(code: string) {
-    debugger;
     alert(code);
   }
 }

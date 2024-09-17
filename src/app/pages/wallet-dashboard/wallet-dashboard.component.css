@@ -1,0 +1,9 @@
+.observation-column {
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+.add-wallet-btn-container {
+  vertical-align: middle;
+  text-align: right;
+}
