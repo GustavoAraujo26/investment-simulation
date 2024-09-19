@@ -9,6 +9,7 @@ import { titleReducer } from './state/title/title.reducer';
 
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
+import { loadingReducer } from './state/loading/loading.reducer';
 
 registerLocaleData(localePt);
 
@@ -18,7 +19,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimationsAsync(),
     importProvidersFrom(StoreModule.forRoot({
-      title: titleReducer
+      title: titleReducer,
+      loading: loadingReducer
     })),
     {
       provide: LOCALE_ID, useValue: 'pt-BR'

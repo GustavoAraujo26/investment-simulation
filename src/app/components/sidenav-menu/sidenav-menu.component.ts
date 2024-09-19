@@ -5,6 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { v4 as uuidv4 } from 'uuid';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../state/app.state';
+import { toogleLoading } from '../../state/loading/loading.actions';
 
 @Component({
   selector: 'app-sidenav-menu',

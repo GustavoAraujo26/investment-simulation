@@ -13,6 +13,9 @@ import { AppState } from './state/app.state';
 import { selectTitle } from './state/title/title.selector';
 import { loadTitle } from './state/title/title.actions';
 import { Observable } from 'rxjs';
+import { selectLoading } from './state/loading/loading.selector';
+import { loadLoading } from './state/loading/loading.actions';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +28,8 @@ import { Observable } from 'rxjs';
     MatButtonModule,
     MatToolbarModule,
     MatDividerModule,
-    SidenavMenuComponent
+    SidenavMenuComponent,
+    NgxLoadingModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -34,9 +38,14 @@ export class AppComponent {
   sidenavOpened: boolean = true;
   public title$: Observable<string>;
 
+  public isLoading: boolean = false;
+
   constructor(private deviceService: DeviceDetectorService, private store: Store<AppState>) {
     this.title$ = this.store.select(selectTitle);
     this.store.dispatch(loadTitle());
+
+    this.store.select(selectLoading).subscribe(value => this.isLoading = value);
+    this.store.dispatch(loadLoading());
   }
 
   ngOnInit() {
