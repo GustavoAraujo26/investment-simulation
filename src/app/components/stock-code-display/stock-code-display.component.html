@@ -5,5 +5,8 @@
     </div>
     <div matListItemTitle class="stock-code">{{code}}</div>
     <div matListItemLine class="stock-name">{{name}}</div>
+    <div matListItemLine [ngClass]="typeContainerLayoutClass" *ngIf="typeShow">
+      {{typeText}}
+    </div>
   </mat-list-item>
 </mat-list>

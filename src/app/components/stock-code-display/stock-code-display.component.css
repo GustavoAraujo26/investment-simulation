@@ -11,3 +11,25 @@
 .stock-code {
   font-weight: bold;
 }
+
+.type-badge {
+  border-radius: 35px;
+  text-align: center;
+  max-width: 70px;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  padding: 0;
+}
+
+.type-stock-bg {
+  background-color: #FC7A57;
+}
+
+.type-bdr-bg {
+  background-color: #A1CDF4;
+}
+
+.type-fund-bg {
+  background-color: #2BC016;
+}

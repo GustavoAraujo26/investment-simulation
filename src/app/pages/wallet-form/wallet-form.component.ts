@@ -26,67 +26,79 @@ import { StockCodeDisplayComponent } from '../../components/stock-code-display/s
 import { MatListModule } from '@angular/material/list';
 import { SaveButtonComponent } from '../../components/save-button/save-button.component';
 import { TableActionsComponent } from '../../components/table-actions/table-actions.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 const ELEMENT_DATA: WalletStock[] = [
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'GDBR34',
     name: 'GEN DYNAMICSDRN',
     logo: 'https://s3-symbol-logo.tradingview.com/general-dynamics--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'bdr'
   },
   {
     code: 'BCPX39',
     name: 'GX COPPER MNDRE',
     logo: 'https://s3-symbol-logo.tradingview.com/global-x--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'SHOP11',
     name: 'FII MULTSHOPCI',
     logo: 'https://brapi.dev/favicon.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'fund'
   },
   {
     code: 'P1NR34',
     name: 'PENTAIR PLC DRN',
     logo: 'https://s3-symbol-logo.tradingview.com/pentair--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
   {
     code: 'MRSA3BF',
     name: 'MRS LOGISTICA',
     logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10
+    percentage: 10,
+    type: 'stock'
   },
 ];
 
@@ -115,9 +127,14 @@ const ELEMENT_DATA: WalletStock[] = [
     MatTooltipModule,
     StockCodeDisplayComponent,
     SaveButtonComponent,
-    TableActionsComponent
+    TableActionsComponent,
+    CurrencyMaskModule,
+    NgxMaskDirective
   ],
-  standalone: true
+  standalone: true,
+  providers: [
+    provideNgxMask()
+  ]
 })
 export class WalletFormComponent implements AfterViewInit {
   displayedColumns = ['code', 'percentage', 'actions'];
@@ -130,6 +147,7 @@ export class WalletFormComponent implements AfterViewInit {
   id: string | null = null;
   title: string = '';
   selectedStock: OptionStock | null = null;
+  percentage: number | null = null;
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
     public dialog: MatDialog

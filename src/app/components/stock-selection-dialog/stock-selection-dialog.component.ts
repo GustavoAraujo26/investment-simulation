@@ -16,7 +16,7 @@ const optionStocks: OptionStock[] = [
     price: 0.46,
     logo: 'https://s3-symbol-logo.tradingview.com/amazonia-on-es--big.svg',
     sector: 'Teste',
-    type: 'Ação'
+    type: 'stock'
   },
   {
     code: 'B3SA3',
@@ -24,7 +24,7 @@ const optionStocks: OptionStock[] = [
     price: 12.13,
     logo: 'https://s3-symbol-logo.tradingview.com/b3-on-nm--big.svg',
     sector: 'Teste',
-    type: 'Ação'
+    type: 'bdr'
   },
   {
     code: 'AZUL4',
@@ -32,7 +32,7 @@ const optionStocks: OptionStock[] = [
     price: 4.95,
     logo: 'https://s3-symbol-logo.tradingview.com/azul--big.svg',
     sector: 'Teste',
-    type: 'Ação'
+    type: 'fund'
   },
   {
     code: 'CVCB3',
@@ -40,7 +40,7 @@ const optionStocks: OptionStock[] = [
     price: 2.08,
     logo: 'https://s3-symbol-logo.tradingview.com/cvc-brasil-on-nm--big.svg',
     sector: 'Teste',
-    type: 'Ação'
+    type: 'stock'
   }
 ];
 
