@@ -33,7 +33,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Ações</th>
         <td mat-cell *matCellDef="let row">
-          <app-table-actions (onEdit)="editWallet(row.id)" (onDelete)="deleteWallet(row.id)"></app-table-actions>
+          <app-table-actions (onEdit)="editWallet(row.id)" (onDelete)="eraseWallet(row)"></app-table-actions>
           &nbsp;
           <button mat-mini-fab color="primary" aria-label="Simular" matTooltip="Simular aporte" (click)="simulateWallet(row.id)">
             <mat-icon>calculate</mat-icon>

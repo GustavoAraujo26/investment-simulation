@@ -16,8 +16,9 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { selectWallets } from '../../state/wallets/wallets.selector';
-import { loadWallets } from '../../state/wallets/wallets.actions';
+import { deleteWallet, loadWallets } from '../../state/wallets/wallets.actions';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 const ELEMENT_DATA: Wallet[] =[
   {
@@ -179,8 +180,19 @@ export class WalletDashboardComponent implements AfterViewInit {
     this.router.navigate([`/wallets/edit/${id}`]);
   }
 
-  deleteWallet(id: string) {
-    alert(id);
+  eraseWallet(wallet: Wallet) {
+    Swal.fire({
+      icon: 'question',
+      title: 'Deleção de carteira',
+      text: `Tem certeza que deseja apagar a carteira "${wallet.title}"?`,
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then((result) => {
+      if (result.isConfirmed){
+        this.store.dispatch(deleteWallet({ id: wallet.id }));
+      }
+    });
   }
 
   simulateWallet(id: string) {

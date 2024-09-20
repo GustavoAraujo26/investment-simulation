@@ -46,6 +46,21 @@ export class WalletsService {
     return of(true);
   }
 
+  deleteWallet(id: string): Observable<boolean> {
+    var storageItem = localStorage.getItem(STORAGEKEY);
+    if (storageItem === null){
+      return of(true);
+    }
+
+    var wallets = JSON.parse(storageItem!) as Wallet[];
+
+    wallets = wallets.filter(x => x.id !== id);
+
+    this.saveWalletsOnLocalStorage(wallets);
+
+    return of(true);
+  }
+
   private saveWalletsOnLocalStorage(wallets: Wallet[]) {
     var json = JSON.stringify(wallets);
     localStorage.setItem(STORAGEKEY, json);
