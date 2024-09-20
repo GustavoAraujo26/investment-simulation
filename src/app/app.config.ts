@@ -14,6 +14,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
 import { stocksContainerReducer } from './state/stocks-container/stocks-container.reducer';
 import { walletsReducer } from './state/wallets/wallets.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { WalletsEffects } from './state/wallets/wallets.effects';
 
 registerLocaleData(localePt);
 
@@ -37,6 +39,7 @@ export const appConfig: ApplicationConfig = {
       useClass: HttpErrorInterceptor,
       multi: true
     },
-    DatePipe
+    DatePipe,
+    importProvidersFrom(EffectsModule.forRoot([WalletsEffects]))
   ]
 };

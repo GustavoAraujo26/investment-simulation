@@ -31,6 +31,9 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import Swal from 'sweetalert2';
 import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
 import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
+import { Wallet } from '../../models/wallet/wallet';
+import { v4 as uuidv4 } from 'uuid';
+import { saveWallet } from '../../state/wallets/wallets.actions';
 
 @Component({
   selector: 'app-wallet-form',
@@ -79,6 +82,14 @@ export class WalletFormComponent implements AfterViewInit {
   title: string = '';
   selectedWalletStock: WalletStock | null = null;
   stockPrice: number | null = null;
+
+  wallet: Wallet = {
+    id: uuidv4(),
+    title: '',
+    observation: '',
+    active: true,
+    stocks: []
+  };
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
     public dialog: MatDialog
@@ -129,7 +140,19 @@ export class WalletFormComponent implements AfterViewInit {
   }
 
   onSaveWallet() {
+    const stocks = this.getStocksFromDataSource();
+    this.wallet.stocks = stocks;
 
+    if (!this.validateWallet(this.wallet))
+      return;
+
+    this.store.dispatch(saveWallet({ wallet: this.wallet }));
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Salvando a carteira',
+      text: 'Carteira salva com sucesso!'
+    });
   }
 
   addSelectedStock() {
@@ -250,8 +273,12 @@ export class WalletFormComponent implements AfterViewInit {
     var checkingCurrentStock: boolean = selectedStock !== null && selectedStock !== undefined;
 
     stocks.forEach(x => {
-      if (checkingCurrentStock && x.code !== selectedStock?.code)
+      if (!checkingCurrentStock){
         totalPercentage += x.percentage!
+      }
+      else if (x.code !== selectedStock!.code){
+        totalPercentage += x.percentage!
+      }
     });
 
     if (checkingCurrentStock){
@@ -269,5 +296,29 @@ export class WalletFormComponent implements AfterViewInit {
     }
 
     this.stockPrice = currentStock!.price;
+  }
+
+  private validateWallet(wallet: Wallet): boolean {
+    var errorMessage: string = '';
+
+    if (this.wallet.title === null || this.wallet.title === undefined || this.wallet.title === ''){
+      errorMessage += 'É obrigatório informar o título da carteira! \n'
+    }
+
+    if (this.wallet.stocks === null || this.wallet.stocks === undefined || this.wallet.stocks.length === 0){
+      errorMessage += 'É obrigatório informar os ativos que fazem parte da carteira! \n';
+    }
+
+    var totalPercentage = this.calculateStocksPercentage(wallet.stocks, null);
+    if (totalPercentage !== 100){
+      errorMessage += 'O somatório das porcentagens de participação dos ativos precisa ser igual a 100%! \n';
+    }
+
+    if (errorMessage !== ''){
+      this.showValidationModal('Validação de carteira', errorMessage);
+      return false;
+    }
+
+    return true;
   }
 }
