@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { Wallet } from '../../models/wallet/wallet';
 import { addAllWallets } from '../../state/wallets/wallets.actions';
 import { Observable, of } from 'rxjs';
+import { OptionStock } from '../../models/option-stock';
+import { SimulationStock } from '../../models/simulation/simulation-stock';
 
 const STORAGEKEY: string = 'wallets';
 
@@ -85,5 +87,27 @@ export class WalletsService {
   private saveWalletsOnLocalStorage(wallets: Wallet[]) {
     var json = JSON.stringify(wallets);
     localStorage.setItem(STORAGEKEY, json);
+  }
+
+  convertToSimulation(walletId: string, wallets: Wallet[], stocks: OptionStock[]): SimulationStock[] {
+    var simulationStocks: SimulationStock[] = [];
+
+    var currentWallet = wallets.find(x => x.id === walletId);
+    if (currentWallet === null || currentWallet === undefined)
+      return [];
+
+    currentWallet.stocks.forEach(x => {
+      var sameStock = stocks.find(x => x.code === x.code);
+      if (sameStock === null || sameStock === undefined)
+        return;
+
+      simulationStocks.push({
+        stock: x,
+        price: sameStock.price,
+        quantity: 0
+      });
+    });
+
+    return simulationStocks;
   }
 }

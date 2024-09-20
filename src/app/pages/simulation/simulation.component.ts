@@ -19,6 +19,14 @@ import { FormsModule } from '@angular/forms';
 import { StockCodeDisplayComponent } from '../../components/stock-code-display/stock-code-display.component';
 import { SimulationStock } from '../../models/simulation/simulation-stock';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
+import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
+import { loadWallets } from '../../state/wallets/wallets.actions';
+import { selectWallets } from '../../state/wallets/wallets.selector';
+import { combineLatest, combineLatestWith } from 'rxjs';
+import { WalletsService } from '../../services/wallets/wallets.service';
+import { ActivatedRoute } from '@angular/router';
+import { OptionStock } from '../../models/option-stock';
 
 const ELEMENT_DATA: SimulationStock[] = [
   {
@@ -122,21 +130,50 @@ const WALLET: Wallet = {
 })
 export class SimulationComponent implements AfterViewInit {
   displayedColumns = ['stock', 'price', 'percentage', 'quantity'];
-  dataSource: MatTableDataSource<SimulationStock>;
+  dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
 
+  id: string | null = null;
   simulationValue: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private store: Store<AppState>) {
-    this.store.dispatch(addTitle({ currentTitle: `Simulador de investimentos - ${WALLET.title}` }));
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+  constructor(private store: Store<AppState>, private walletService: WalletsService,
+    private route: ActivatedRoute
+  ) {
+    this.id = this.route.snapshot.paramMap.get('id');
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.store.dispatch(loadWallets());
+    this.store.dispatch(loadStocksContainer());
+
+    this.store.select(selectWallets).pipe(
+      combineLatestWith(
+        this.store.select(selectStocksContainer)
+      )
+    ).subscribe(([wallets, stockContainer]) => {
+      var simulationStocks = this.walletService.convertToSimulation(this.id!, wallets, stockContainer.stocks);
+      this.updateDataSource(simulationStocks);
+      this.getWalletTitle(wallets);
+    });
   }
 
+  updateDataSource(stocks: SimulationStock[]) {
+    this.dataSource = new MatTableDataSource(stocks);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  getWalletTitle(wallets: Wallet[]) {
+    var currentWallet = wallets.find(x => x.id === this.id);
+    if (currentWallet === null || currentWallet === undefined){
+      this.store.dispatch(addTitle({ currentTitle: 'Simulador de investimentos' }));
+    }
+
+    this.store.dispatch(addTitle({ currentTitle: `Simulador de investimentos - ${currentWallet!.title}` }));
+  }
 }
