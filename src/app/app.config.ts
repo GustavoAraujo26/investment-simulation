@@ -13,6 +13,7 @@ import { loadingReducer } from './state/loading/loading.reducer';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
 import { stocksContainerReducer } from './state/stocks-container/stocks-container.reducer';
+import { walletsReducer } from './state/wallets/wallets.reducer';
 
 registerLocaleData(localePt);
 
@@ -24,7 +25,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(StoreModule.forRoot({
       title: titleReducer,
       loading: loadingReducer,
-      stocksContainer: stocksContainerReducer
+      stocksContainer: stocksContainerReducer,
+      wallets: walletsReducer
     })),
     {
       provide: LOCALE_ID, useValue: 'pt-BR'
