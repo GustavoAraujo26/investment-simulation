@@ -1,5 +1,5 @@
 import { SidenavMenuItem } from './../../models/sidenav-menu-item';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
 import { toogleLoading } from '../../state/loading/loading.actions';
+import { selectWallets } from '../../state/wallets/wallets.selector';
+import { loadWallets } from '../../state/wallets/wallets.actions';
+import { Wallet } from '../../models/wallet/wallet';
 
 @Component({
   selector: 'app-sidenav-menu',
@@ -22,8 +25,13 @@ import { toogleLoading } from '../../state/loading/loading.actions';
 })
 export class SidenavMenuComponent implements OnInit {
   menuItems: SidenavMenuItem[] = [];
+  simulationSubMenuItens: SidenavMenuItem[] = [];
+  simulationMenuId: string = uuidv4();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private store: Store<AppState>) {
+    this.store.select(selectWallets).subscribe(value => this.updateSimulationMenuItems(value));
+    this.store.dispatch(loadWallets());
+  }
 
   ngOnInit() {
     this.createMenus();
@@ -57,32 +65,6 @@ export class SidenavMenuComponent implements OnInit {
       isActive: false,
       icon: 'add'
     });
-
-    this.menuItems.push({
-      id: uuidv4(),
-      text: 'Simular',
-      route: '/investment/simulation',
-      subItems: this.createMenuItems([], '/investment/simulation', 'paid'),
-      isActive: false,
-      icon: 'calculate'
-    });
-  }
-
-  createMenuItems(subMenus: SidenavMenuItem[], basePath: string, icon: string): SidenavMenuItem[] {
-    var items: SidenavMenuItem[] = [];
-
-    for(var i = 1; i <= 5; i++){
-      items.push({
-        id: uuidv4(),
-        text: `Teste Menu ${i}`,
-        route: `${basePath}/${i}`,
-        subItems: subMenus,
-        isActive: false,
-        icon: icon
-      });
-    }
-
-    return items;
   }
 
   menuGo(menuId: string, index: number) {
@@ -137,5 +119,70 @@ export class SidenavMenuComponent implements OnInit {
 
       x.subItems.forEach(y => y.isActive = false);
     });
+  }
+
+  updateSimulationMenuItems(wallets: Wallet[]) {
+    this.removeSimulationMenu();
+
+    var walletCount = wallets.length;
+    if (walletCount === 0){
+      this.simulationSubMenuItens = [];
+      return;
+    }
+
+    var subMenus: SidenavMenuItem[] = [];
+
+    wallets.forEach(x => {
+      if (!x.active)
+        return;
+
+      subMenus.push({
+        id: x.id,
+        text: x.title,
+        route: `/investment/simulation/${x.id}`,
+        subItems: subMenus,
+        isActive: false,
+        icon: 'paid'
+      });
+    });
+
+    if (subMenus.length === 0){
+      this.simulationSubMenuItens = [];
+      return;
+    }
+
+    this.simulationSubMenuItens = [...subMenus];
+
+    this.manageSimulationMenu();
+  }
+
+  removeSimulationMenu() {
+    var menusWithoutSimulation = this.menuItems.filter(x => x.id !== this.simulationMenuId);
+    this.menuItems = [...menusWithoutSimulation];
+    this.simulationSubMenuItens = [];
+  }
+
+  checkSimulationMenu(): boolean {
+    return this.menuItems.filter(x => x.id === this.simulationMenuId).length > 0;
+  }
+
+  createSimulationMenu() {
+    this.menuItems.push({
+      id: this.simulationMenuId,
+      text: 'Simular',
+      route: '/investment/simulation',
+      subItems: this.simulationSubMenuItens,
+      isActive: false,
+      icon: 'calculate'
+    });
+  }
+
+  manageSimulationMenu() {
+    if (this.simulationSubMenuItens.length !== 0){
+      this.createSimulationMenu();
+    }
+    else{
+      this.removeSimulationMenu();
+    }
   }
 }
