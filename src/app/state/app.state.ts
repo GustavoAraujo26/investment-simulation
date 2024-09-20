@@ -1,7 +1,7 @@
-import { BrapiResponse } from "../models/brapi/brapi-response";
+import { StocksContainer } from "../models/stocks-container";
 
 export interface AppState {
   title: string,
   loading: boolean,
-  brapiResponse: BrapiResponse
+  stocksContainer: StocksContainer
 }

@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 import { selectLoading } from './state/loading/loading.selector';
 import { loadLoading } from './state/loading/loading.actions';
 import { NgxLoadingModule } from 'ngx-loading';
-import { BrapiStockLoadingService } from './services/brapi-stock-loading/brapi-stock-loading.service';
+import { StocksContainerService } from './services/stocks-container/stocks-container.service';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +42,7 @@ export class AppComponent {
   public isLoading: boolean = false;
 
   constructor(private deviceService: DeviceDetectorService, private store: Store<AppState>,
-    private brapiStockLoadingService: BrapiStockLoadingService
+    private stocksContainerService: StocksContainerService
   ) {
     this.title$ = this.store.select(selectTitle);
     this.store.dispatch(loadTitle());
@@ -50,7 +50,7 @@ export class AppComponent {
     this.store.select(selectLoading).subscribe(value => this.isLoading = value);
     this.store.dispatch(loadLoading());
 
-    this.brapiStockLoadingService.loadStocks();
+    this.stocksContainerService.loadStocks();
   }
 
   ngOnInit() {

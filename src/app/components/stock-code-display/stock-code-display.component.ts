@@ -32,6 +32,10 @@ export class StockCodeDisplayComponent implements OnInit {
     this.pickTypeColor();
   }
 
+  ngOnChanges() {
+    this.pickTypeColor();
+  }
+
   pickTypeColor() {
     if (this.type === null || this.type === undefined || this.type === ''){
       this.typeContainerLayoutClass = '';

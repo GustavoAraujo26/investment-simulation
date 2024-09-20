@@ -8,6 +8,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {CurrencyPipe} from '@angular/common';
+import { AppState } from '../../state/app.state';
+import { Store } from '@ngrx/store';
+import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
+import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
 
 const optionStocks: OptionStock[] = [
   {
@@ -70,14 +74,19 @@ export class StockSelectionDialogComponent implements AfterViewInit {
 
   constructor(
     public dialogRef: MatDialogRef<StockSelectionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string
+    @Inject(MAT_DIALOG_DATA) public data: string,
+    private store: Store<AppState>
   ){
-    this.dataSource = new MatTableDataSource(optionStocks);
+    this.dataSource = new MatTableDataSource();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.store.select(selectStocksContainer).subscribe(value => {
+      this.dataSource = new MatTableDataSource(value.stocks);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+    this.store.dispatch(loadStocksContainer());
   }
 
   applyFilter(event: Event) {

@@ -3,6 +3,6 @@ export interface OptionStock {
   name: string,
   price: number,
   logo: string | null,
-  sector: string,
+  sector: string | null,
   type: string
 }
