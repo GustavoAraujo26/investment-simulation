@@ -8,8 +8,10 @@ import { StoreModule } from '@ngrx/store';
 import { titleReducer } from './state/title/title.reducer';
 
 import localePt from '@angular/common/locales/pt';
-import { registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
 import { loadingReducer } from './state/loading/loading.reducer';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpErrorInterceptor } from './interceptors/http-error-interceptor';
 
 registerLocaleData(localePt);
 
@@ -24,6 +26,13 @@ export const appConfig: ApplicationConfig = {
     })),
     {
       provide: LOCALE_ID, useValue: 'pt-BR'
-    }
+    },
+    importProvidersFrom(HttpClientModule),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    },
+    DatePipe
   ]
 };

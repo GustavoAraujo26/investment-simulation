@@ -37,11 +37,7 @@
             "scripts": [
               "./node_modules/material-design-lite/material.min.js"
             ],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "server": "src/main.server.ts"
           },
           "configurations": {
             "production": {
