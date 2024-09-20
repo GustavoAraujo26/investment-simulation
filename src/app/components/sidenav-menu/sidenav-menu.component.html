@@ -12,7 +12,7 @@
       @for (subMenu of menuItem.subItems; track subMenu; let submenuIndex = $index){
         <mat-list-item (click)="subMenuGo(subMenu.id, menuItem.id, submenuIndex, menuIndex)">
           <mat-icon class="parent-menu-icon" [fontIcon]="subMenu.icon"></mat-icon>
-          {{ menuItem.text }}
+          {{ subMenu.text }}
         </mat-list-item>
       }
     </mat-nav-list>
