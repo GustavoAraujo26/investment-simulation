@@ -7,4 +7,6 @@ export const saveWallet = createAction('[Wallets] Save wallet', props<{ wallet: 
 
 export const deleteWallet = createAction('[Wallets] Delete wallet', props<{ id: string }>());
 
+export const changeWalletStatus = createAction('[Wallet] Change wallet status', props<{ id: string, active: boolean }>());
+
 export const loadWallets = createAction('[Wallet] Load all wallets');

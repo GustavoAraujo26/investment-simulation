@@ -61,6 +61,27 @@ export class WalletsService {
     return of(true);
   }
 
+  changeWalletStatus(id: string, active: boolean): Observable<boolean> {
+    var storageItem = localStorage.getItem(STORAGEKEY);
+    if (storageItem === null){
+      return of(true);
+    }
+
+    var wallets = JSON.parse(storageItem!) as Wallet[];
+
+    var currentWallet = wallets.find(x => x.id === id);
+    if (currentWallet === null || currentWallet === undefined)
+      return of(true);
+
+    var index = wallets.indexOf(currentWallet);
+
+    wallets[index].active = active;
+
+    this.saveWalletsOnLocalStorage(wallets);
+
+    return of(true);
+  }
+
   private saveWalletsOnLocalStorage(wallets: Wallet[]) {
     var json = JSON.stringify(wallets);
     localStorage.setItem(STORAGEKEY, json);

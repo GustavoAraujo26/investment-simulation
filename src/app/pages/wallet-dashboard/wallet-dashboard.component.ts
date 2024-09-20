@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { selectWallets } from '../../state/wallets/wallets.selector';
-import { deleteWallet, loadWallets } from '../../state/wallets/wallets.actions';
+import { changeWalletStatus, deleteWallet, loadWallets, saveWallet } from '../../state/wallets/wallets.actions';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -196,11 +196,29 @@ export class WalletDashboardComponent implements AfterViewInit {
   }
 
   simulateWallet(id: string) {
-
+    this.router.navigate([`/investment/simulation/${id}`]);
   }
 
   createWallet() {
     this.router.navigate(['/wallets/create']);
+  }
+
+  toogleWalletStatus(wallet: Wallet) {
+    var actionMessage = wallet.active ? 'desativar' : 'ativar';
+    var message = `Tem certeza que deseja ${actionMessage} a carteira ${wallet.title}?`;
+
+    Swal.fire({
+      icon: 'question',
+      title: 'Alteração de status da carteira',
+      text: message,
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then((result) => {
+      if (result.isConfirmed){
+        this.store.dispatch(changeWalletStatus({ id: wallet.id, active: !wallet.active }));
+      }
+    });
   }
 
   updateDataSource(stocks: Wallet[]) {

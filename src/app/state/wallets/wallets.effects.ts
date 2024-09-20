@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { addAllWallets, loadWallets, saveWallet, deleteWallet } from './wallets.actions';
+import { addAllWallets, loadWallets, saveWallet, deleteWallet, changeWalletStatus } from './wallets.actions';
 import { from, switchMap, of, mergeMap, map } from 'rxjs';
 
 @Injectable()
@@ -42,6 +42,18 @@ export class WalletsEffects{
       ofType(deleteWallet),
       switchMap((action) =>
         this.walletsService.deleteWallet(action.id).pipe(
+          map((result) => console.log(result))
+        )
+      ),
+    ),
+    { dispatch: false }
+  );
+
+  changeWalletStatus$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(changeWalletStatus),
+      switchMap((action) =>
+        this.walletsService.changeWalletStatus(action.id, action.active).pipe(
           map((result) => console.log(result))
         )
       ),
