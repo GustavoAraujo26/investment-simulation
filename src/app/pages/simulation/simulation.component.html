@@ -34,7 +34,7 @@
         </ng-container>
         <ng-container matColumnDef="percentage">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentagem da Carteira</th>
-          <td mat-cell *matCellDef="let row">{{row.stock.percentage / 100 | percent}}</td>
+          <td mat-cell *matCellDef="let row">{{row.stock.percentage / 100 | percent : '1.2-2'}}</td>
         </ng-container>
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantidade de Ativos</th>

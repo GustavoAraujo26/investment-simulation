@@ -35,7 +35,7 @@
   <div class="mdl-cell mdl-cell--6-col">
     <mat-card>
       <mat-card-header>
-        <mat-card-title style="vertical-align: center; margin-bottom: 5px;">
+        <mat-card-title class="card-title-with-actions">
           Seleção de Ativos
           <button mat-mini-fab color="accent" (click)="openStockSelectionDialog()" matTooltip="Selecionar ativo para a carteira">
             <mat-icon>add</mat-icon>
@@ -43,41 +43,46 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div *ngIf="selectedStock !== null && selectedStock !== undefined">
+        <div *ngIf="selectedWalletStock !== null && selectedWalletStock !== undefined">
           <mat-divider class="global-divider"></mat-divider>
           <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-              <app-stock-code-display [logo]="selectedStock.logo!" logoHeight="50"
-                [code]="selectedStock.code" [name]="selectedStock.name" [type]="selectedStock.type"></app-stock-code-display>
+              <app-stock-code-display [logo]="selectedWalletStock.logo!" logoHeight="50"
+                [code]="selectedWalletStock.code" [name]="selectedWalletStock.name" [type]="selectedWalletStock.type"></app-stock-code-display>
             </div>
           </div>
           <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--6-col">
               <mat-form-field class="full-width">
                 <mat-label>Último Preço</mat-label>
-                <input matInput currencyMask [(ngModel)]="selectedStock.price" [options]="{prefix: 'R$ ', thousands: '.', decimal: ','}" disabled/>
+                <input matInput currencyMask [(ngModel)]="stockPrice" [options]="{prefix: 'R$ ', thousands: '.', decimal: ','}" disabled/>
               </mat-form-field>
             </div>
             <div class="mdl-cell mdl-cell--6-col">
               <mat-form-field class="full-width">
                 <mat-label>Peso (%)</mat-label>
-                <input matInput type="text" [(ngModel)]="percentage" mask="percent.2" decimalMarker="," suffix="%" />
+                <input matInput type="text" [(ngModel)]="selectedWalletStock.percentage" mask="percent.2" decimalMarker="," suffix="%" />
               </mat-form-field>
             </div>
           </div>
           <mat-divider class="global-divider"></mat-divider>
         </div>
       </mat-card-content>
-      <mat-card-actions style="justify-content: right;" *ngIf="selectedStock !== null && selectedStock !== undefined">
+      <mat-card-actions style="justify-content: right;" *ngIf="selectedWalletStock !== null && selectedWalletStock !== undefined">
         <button mat-flat-button (click)="clearSelectedStock()">Limpar</button>&nbsp;
-        <button mat-flat-button color="accent">Inserir</button>
+        <button mat-flat-button color="accent" (click)="addSelectedStock()">Inserir</button>
       </mat-card-actions>
     </mat-card>
   </div>
   <div class="mdl-cell mdl-cell--6-col">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Composição da Carteira</mat-card-title>
+        <mat-card-title>
+          Composição da Carteira
+          <button mat-mini-fab color="warn" (click)="updateDataSourceStocks([])" matTooltip="Limpar ativos da carteira" *ngIf="dataSource.data.length > 0">
+            <mat-icon>cleaning_services</mat-icon>
+          </button>
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-divider class="global-divider"></mat-divider>
@@ -93,7 +98,7 @@
             <ng-container matColumnDef="percentage">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentagem</th>
               <td mat-cell *matCellDef="let row">
-                {{row.percentage / 100 | percent}}
+                {{row.percentage / 100 | percent : '1.2-2'}}
               </td>
             </ng-container>
             <ng-container matColumnDef="actions">
@@ -110,7 +115,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
             <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="3">Nenhum ativo encontrado!</td>
+              <td class="mat-cell text-center" colspan="3">Nenhum ativo encontrado!</td>
             </tr>
           </table>
         </section>

@@ -3,5 +3,5 @@ export interface WalletStock {
   name: string,
   logo: string | null,
   type: string,
-  percentage: number
+  percentage: number | null
 }

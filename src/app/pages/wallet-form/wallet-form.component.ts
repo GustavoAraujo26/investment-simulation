@@ -28,79 +28,9 @@ import { SaveButtonComponent } from '../../components/save-button/save-button.co
 import { TableActionsComponent } from '../../components/table-actions/table-actions.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-
-const ELEMENT_DATA: WalletStock[] = [
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'GDBR34',
-    name: 'GEN DYNAMICSDRN',
-    logo: 'https://s3-symbol-logo.tradingview.com/general-dynamics--big.svg',
-    percentage: 10,
-    type: 'bdr'
-  },
-  {
-    code: 'BCPX39',
-    name: 'GX COPPER MNDRE',
-    logo: 'https://s3-symbol-logo.tradingview.com/global-x--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'SHOP11',
-    name: 'FII MULTSHOPCI',
-    logo: 'https://brapi.dev/favicon.svg',
-    percentage: 10,
-    type: 'fund'
-  },
-  {
-    code: 'P1NR34',
-    name: 'PENTAIR PLC DRN',
-    logo: 'https://s3-symbol-logo.tradingview.com/pentair--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-  {
-    code: 'MRSA3BF',
-    name: 'MRS LOGISTICA',
-    logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-    percentage: 10,
-    type: 'stock'
-  },
-];
+import Swal from 'sweetalert2';
+import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
+import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
 
 @Component({
   selector: 'app-wallet-form',
@@ -139,6 +69,7 @@ const ELEMENT_DATA: WalletStock[] = [
 export class WalletFormComponent implements AfterViewInit {
   displayedColumns = ['code', 'percentage', 'actions'];
   dataSource: MatTableDataSource<WalletStock>;
+  allStocks: OptionStock[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -146,20 +77,20 @@ export class WalletFormComponent implements AfterViewInit {
   isEdition: boolean = false;
   id: string | null = null;
   title: string = '';
-  selectedStock: OptionStock | null = null;
-  percentage: number | null = null;
+  selectedWalletStock: WalletStock | null = null;
+  stockPrice: number | null = null;
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
     public dialog: MatDialog
   ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    this.dataSource = new MatTableDataSource();
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.store.select(selectStocksContainer).subscribe(value => this.allStocks = value.stocks);
+    this.store.dispatch(loadStocksContainer());
   }
 
   getCurrentId(){
@@ -180,24 +111,163 @@ export class WalletFormComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== null && result !== undefined && result !== ''){
-        this.selectedStock = result;
+        this.selectedWalletStock = {
+          code: result.code,
+          name: result.name,
+          logo: result.logo,
+          type: result.type,
+          percentage: null
+        };
+        this.stockPrice = result.price;
       }
     });
   }
 
   clearSelectedStock() {
-    this.selectedStock = null;
+    this.selectedWalletStock = null;
+    this.stockPrice = null;
   }
 
   onSaveWallet() {
-    alert('Success');
+
+  }
+
+  addSelectedStock() {
+    if (this.selectedWalletStock!.percentage !== null && this.selectedWalletStock!.percentage !== undefined){
+      this.selectedWalletStock!.percentage = +this.selectedWalletStock!.percentage!;
+    }
+
+    if (!this.validateSelectedStock())
+      return;
+
+    this.pushStock();
+    this.clearSelectedStock();
   }
 
   editSelectedStock(code: string) {
-    alert(code);
+    const stocks = this.getStocksFromDataSource();
+
+    var selectedStock = stocks.find(x => x.code === code);
+    if (selectedStock === null || selectedStock === undefined){
+      this.showValidationModal('Edição de ativo', `Ativo ${code} não encontrado na lista!`);
+      return;
+    }
+
+    this.selectedWalletStock = {
+      code: selectedStock.code,
+      name: selectedStock.name,
+      logo: selectedStock.logo,
+      type: selectedStock.type,
+      percentage: selectedStock.percentage
+    };
+
+    this.loadStockPriceEdition(selectedStock.code);
   }
 
   deleteSelectedStock(code: string) {
-    alert(code);
+    const stocks = this.getStocksFromDataSource();
+
+    var selectedStock = stocks.find(x => x.code === code);
+    if (selectedStock === null || selectedStock === undefined){
+      this.showValidationModal('Deleção de ativo', `Ativo ${code} não encontrado na lista!`);
+      return;
+    }
+
+    stocks.splice(stocks.indexOf(selectedStock!), 1);
+    this.updateDataSourceStocks(stocks);
+  }
+
+  pushStock() {
+    const data = this.getStocksFromDataSource();
+
+    var stockIndex = this.checkStockInDataSource(this.selectedWalletStock!.code);
+    if (stockIndex === 0){
+      data.push(this.selectedWalletStock!);
+    }
+    else{
+      data[stockIndex] = {
+        code: this.selectedWalletStock!.code,
+        name: this.selectedWalletStock!.name,
+        logo: this.selectedWalletStock!.logo,
+        type: this.selectedWalletStock!.type,
+        percentage: this.selectedWalletStock!.percentage
+      };
+    }
+
+    this.updateDataSourceStocks(data);
+  }
+
+  getStocksFromDataSource(): WalletStock[] {
+    return this.dataSource.data;
+  }
+
+  updateDataSourceStocks(stocks: WalletStock[]) {
+    this.dataSource = new MatTableDataSource(stocks);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  checkStockInDataSource(code: string): number {
+    const stocks = this.getStocksFromDataSource();
+
+    var selectedStock = stocks.find(x => x.code === code);
+    if (selectedStock === null || selectedStock === undefined)
+      return 0;
+
+    return stocks.indexOf(selectedStock);
+  }
+
+  validateSelectedStock(): boolean {
+    const validationTitle: string = 'Validação de seleção de ativo';
+    const stocks = this.getStocksFromDataSource();
+
+    if (this.selectedWalletStock!.percentage === null || this.selectedWalletStock!.percentage === 0){
+      this.showValidationModal(validationTitle,
+        'A porcentagem de participação do ativo na carteira é de preenchimento obrigatório!');
+      return false;
+    }
+
+    var totalPercentage = this.calculateStocksPercentage(stocks, this.selectedWalletStock);
+    if (totalPercentage > 100){
+      this.showValidationModal(validationTitle,
+        'O somatório de porcentagem de participação dos ativos na carteira não pode ultrapassar 100%!');
+        return false;
+    }
+
+    return true;
+  }
+
+  private showValidationModal(title: string, text: string) {
+    Swal.fire({
+      icon: 'warning',
+      title: title,
+      text: text
+    });
+  }
+
+  private calculateStocksPercentage(stocks: WalletStock[], selectedStock: WalletStock | null): number {
+    var totalPercentage: number = 0;
+    var checkingCurrentStock: boolean = selectedStock !== null && selectedStock !== undefined;
+
+    stocks.forEach(x => {
+      if (checkingCurrentStock && x.code !== selectedStock?.code)
+        totalPercentage += x.percentage!
+    });
+
+    if (checkingCurrentStock){
+      totalPercentage += selectedStock!.percentage!;
+    }
+
+    return totalPercentage;
+  }
+
+  private loadStockPriceEdition(code: string) {
+    var currentStock = this.allStocks.find(x => x.code === code);
+    if (currentStock === null || currentStock === undefined){
+      this.showValidationModal('Carregamento de preço de ativo',
+        `Não foi possível carregar o preço do ativo ${code}!`);
+    }
+
+    this.stockPrice = currentStock!.price;
   }
 }

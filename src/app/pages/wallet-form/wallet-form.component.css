@@ -36,3 +36,8 @@ table {
   height: 400px;
   overflow: auto;
 }
+
+.card-title-with-actions {
+  vertical-align: center;
+  margin-bottom: 5px;
+}
