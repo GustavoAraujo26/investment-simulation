@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { State, Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
 import { addTitle } from '../../state/title/title.actions';
@@ -92,7 +92,7 @@ export class WalletFormComponent implements AfterViewInit {
   };
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
-    public dialog: MatDialog
+    public dialog: MatDialog, private router: Router
   ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
@@ -153,6 +153,8 @@ export class WalletFormComponent implements AfterViewInit {
       title: 'Salvando a carteira',
       text: 'Carteira salva com sucesso!'
     });
+
+    this.router.navigate(['/wallets/dashboard']);
   }
 
   addSelectedStock() {

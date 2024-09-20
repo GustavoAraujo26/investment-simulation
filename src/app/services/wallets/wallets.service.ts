@@ -25,7 +25,6 @@ export class WalletsService {
   }
 
   saveWallet(wallet: Wallet): Observable<boolean> {
-    debugger;
     var storageItem = localStorage.getItem(STORAGEKEY);
     if (storageItem === null){
       this.saveWalletsOnLocalStorage([wallet]);
@@ -35,7 +34,7 @@ export class WalletsService {
     var wallets = JSON.parse(storageItem!) as Wallet[];
 
     var walletIndex = wallets.findIndex(x => x.id === wallet.id);
-    if (walletIndex === 0){
+    if (walletIndex === -1){
       wallets.push(wallet);
     }
     else{

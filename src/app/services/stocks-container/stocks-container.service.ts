@@ -35,7 +35,6 @@ export class StocksContainerService {
 
     var storageItem = localStorage.getItem(STORAGEKEY);
     if (storageItem !== null && storageItem !== ''){
-      console.log(storageItem);
       var currentResponse = JSON.parse(storageItem) as StocksContainer;
 
       if (currentResponse.period === validPeriod){

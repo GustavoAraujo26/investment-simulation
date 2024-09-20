@@ -15,6 +15,8 @@ import { TableActionsComponent } from '../../components/table-actions/table-acti
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { selectWallets } from '../../state/wallets/wallets.selector';
+import { loadWallets } from '../../state/wallets/wallets.actions';
 
 const ELEMENT_DATA: Wallet[] =[
   {
@@ -158,6 +160,9 @@ export class WalletDashboardComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    this.store.select(selectWallets).subscribe(value => this.updateDataSource(value));
+    this.store.dispatch(loadWallets());
   }
 
   applyFilter(event: Event) {
@@ -183,5 +188,11 @@ export class WalletDashboardComponent implements AfterViewInit {
 
   createWallet() {
 
+  }
+
+  updateDataSource(stocks: Wallet[]) {
+    this.dataSource = new MatTableDataSource(stocks);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }
