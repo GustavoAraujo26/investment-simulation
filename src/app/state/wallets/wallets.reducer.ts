@@ -1,6 +1,6 @@
 import { Wallet } from './../../models/wallet/wallet';
 import { createReducer, on } from "@ngrx/store";
-import { addAllWallets, deleteWallet, loadCurrentWallet, loadWallets, saveWallet } from "./wallets.actions";
+import { addAllWallets, deleteWallet, loadWallets, saveWallet } from "./wallets.actions";
 
 export const initialState: Wallet[] = [];
 
@@ -21,7 +21,4 @@ export const walletsReducer = createReducer(
     return state.filter(x => x.id !== id);
   }),
   on(loadWallets, (state) => state),
-  on(loadCurrentWallet, (state, { id }) => {
-    return state.filter(x => x.id === id);
-  })
 );

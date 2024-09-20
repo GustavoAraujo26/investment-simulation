@@ -1,3 +1,4 @@
+import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -9,19 +10,24 @@ import {MatIconModule} from '@angular/material/icon';
   standalone: true,
   imports: [
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    CommonModule
   ]
 })
 export class SaveButtonComponent implements OnInit {
 
   @Output() onSave: EventEmitter<void> = new EventEmitter();
 
-  constructor() { }
+  constructor(private location: Location) { }
 
   ngOnInit() {
   }
 
   saving() {
     this.onSave.emit();
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

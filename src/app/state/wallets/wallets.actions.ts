@@ -8,5 +8,3 @@ export const saveWallet = createAction('[Wallets] Save wallet', props<{ wallet: 
 export const deleteWallet = createAction('[Wallets] Delete wallet', props<{ id: string }>());
 
 export const loadWallets = createAction('[Wallet] Load all wallets');
-
-export const loadCurrentWallet = createAction('[Wallets] Load current wallet', props<{ id: string }>());

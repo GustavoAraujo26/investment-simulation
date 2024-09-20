@@ -33,7 +33,8 @@ import { selectStocksContainer } from '../../state/stocks-container/stocks-conta
 import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
 import { Wallet } from '../../models/wallet/wallet';
 import { v4 as uuidv4 } from 'uuid';
-import { saveWallet } from '../../state/wallets/wallets.actions';
+import { loadWallets, saveWallet } from '../../state/wallets/wallets.actions';
+import { selectWallets } from '../../state/wallets/wallets.selector';
 
 @Component({
   selector: 'app-wallet-form',
@@ -71,7 +72,7 @@ import { saveWallet } from '../../state/wallets/wallets.actions';
 })
 export class WalletFormComponent implements AfterViewInit {
   displayedColumns = ['code', 'percentage', 'actions'];
-  dataSource: MatTableDataSource<WalletStock>;
+  dataSource: MatTableDataSource<WalletStock> = new MatTableDataSource();
   allStocks: OptionStock[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -96,7 +97,6 @@ export class WalletFormComponent implements AfterViewInit {
   ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
-    this.dataSource = new MatTableDataSource();
   }
 
   ngAfterViewInit() {
@@ -110,10 +110,29 @@ export class WalletFormComponent implements AfterViewInit {
     if (this.id === null || this.id === undefined || this.id === ''){
       this.isEdition = false;
       this.title = 'Criação de carteira de investimentos';
+      this.id = uuidv4();
     }
     else{
       this.isEdition = true;
       this.title = 'Edição de carteira de investimentos';
+
+      this.store.dispatch(loadWallets());
+      this.store.select(selectWallets).subscribe(value => {
+        var currentWallet = value.find(x => x.id === this.id);
+        if (currentWallet === null || currentWallet === undefined){
+          this.showValidationModal('Carregamento de carteira', 'Não foi possível encontrar a carteira!');
+          return;
+        }
+
+        this.wallet = {
+          id: currentWallet.id,
+          active: currentWallet.active,
+          title: currentWallet.title,
+          observation: currentWallet.observation,
+          stocks: [...currentWallet.stocks]
+        };
+        this.updateDataSourceStocks(this.wallet.stocks);
+      });
     }
   }
 
@@ -190,7 +209,7 @@ export class WalletFormComponent implements AfterViewInit {
   }
 
   deleteSelectedStock(code: string) {
-    const stocks = this.getStocksFromDataSource();
+    var stocks = this.getStocksFromDataSource();
 
     var selectedStock = stocks.find(x => x.code === code);
     if (selectedStock === null || selectedStock === undefined){
@@ -198,7 +217,7 @@ export class WalletFormComponent implements AfterViewInit {
       return;
     }
 
-    stocks.splice(stocks.indexOf(selectedStock!), 1);
+    stocks = stocks.filter(x => x.code !== selectedStock!.code);
     this.updateDataSourceStocks(stocks);
   }
 

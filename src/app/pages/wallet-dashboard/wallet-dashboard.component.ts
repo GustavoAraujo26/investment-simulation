@@ -17,6 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { selectWallets } from '../../state/wallets/wallets.selector';
 import { loadWallets } from '../../state/wallets/wallets.actions';
+import { Router } from '@angular/router';
 
 const ELEMENT_DATA: Wallet[] =[
   {
@@ -152,7 +153,7 @@ export class WalletDashboardComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private router: Router) {
     this.store.dispatch(addTitle({ currentTitle: 'Lista de carteiras de investimentos' }));
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
   }
@@ -175,7 +176,7 @@ export class WalletDashboardComponent implements AfterViewInit {
   }
 
   editWallet(id: string) {
-    alert(id);
+    this.router.navigate([`/wallets/edit/${id}`]);
   }
 
   deleteWallet(id: string) {
@@ -187,7 +188,7 @@ export class WalletDashboardComponent implements AfterViewInit {
   }
 
   createWallet() {
-
+    this.router.navigate(['/wallets/create']);
   }
 
   updateDataSource(stocks: Wallet[]) {

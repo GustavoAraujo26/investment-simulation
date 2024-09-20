@@ -15,7 +15,7 @@
             </mat-form-field>
           </td>
           <td>
-            <mat-slide-toggle class="ml-10" [(ngModel)]="wallet.active">
+            <mat-slide-toggle class="ml-10" [(ngModel)]="wallet.active" *ngIf="isEdition">
               Ativo
             </mat-slide-toggle>
           </td>
