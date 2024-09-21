@@ -27,6 +27,7 @@ import { combineLatest, combineLatestWith, map, switchMap } from 'rxjs';
 import { WalletsService } from '../../services/wallets/wallets.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OptionStock } from '../../models/option-stock';
+import Swal from 'sweetalert2';
 
 const ELEMENT_DATA: SimulationStock[] = [
   {
@@ -151,6 +152,7 @@ export class SimulationComponent implements OnInit {
   }
 
   initializeData(){
+    this.simulationValue = null;
     this.store.dispatch(loadWallets());
     this.store.dispatch(loadStocksContainer());
 
@@ -179,5 +181,26 @@ export class SimulationComponent implements OnInit {
     }
 
     this.store.dispatch(addTitle({ currentTitle: `Simulador de investimentos - ${currentWallet!.title}` }));
+  }
+
+  calculate() {
+    if (!this.validateSimulationValue())
+      return;
+
+    var calculatedStocks = this.walletService.calculateStocks(this.simulationValue!, this.dataSource.data);
+    this.updateDataSource(calculatedStocks);
+  }
+
+  validateSimulationValue(): boolean {
+    if (this.simulationValue === null || this.simulationValue === undefined || this.simulationValue === 0){
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validação da simulação',
+        text: 'É obrigatório informar o valor a ser simulado!'
+      });
+      return false;
+    }
+
+    return true;
   }
 }

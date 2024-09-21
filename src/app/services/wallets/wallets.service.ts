@@ -97,7 +97,7 @@ export class WalletsService {
       return [];
 
     currentWallet.stocks.forEach(x => {
-      var sameStock = stocks.find(x => x.code === x.code);
+      var sameStock = stocks.find(y => y.code === x.code);
       if (sameStock === null || sameStock === undefined)
         return;
 
@@ -109,5 +109,25 @@ export class WalletsService {
     });
 
     return simulationStocks;
+  }
+
+  calculateStocks(valueToCalculate: number, stocks: SimulationStock[]): SimulationStock[] {
+    var calculatedStocks: SimulationStock[] = [];
+
+    stocks.forEach(x => {
+      calculatedStocks.push({
+        stock: x.stock,
+        price: x.price,
+        quantity: this.calculateQuantity(valueToCalculate, x.stock.percentage!, x.price)
+      })
+    });
+
+    return calculatedStocks;
+  }
+
+  private calculateQuantity(value: number, percentage: number, price: number): number {
+    var totalQuantity = Number(((value * percentage) / 100).toFixed(2));
+
+    return Math.round(totalQuantity / price);
   }
 }
