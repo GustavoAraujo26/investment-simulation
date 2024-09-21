@@ -23,9 +23,9 @@ import { selectStocksContainer } from '../../state/stocks-container/stocks-conta
 import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
 import { loadWallets } from '../../state/wallets/wallets.actions';
 import { selectWallets } from '../../state/wallets/wallets.selector';
-import { combineLatest, combineLatestWith } from 'rxjs';
+import { combineLatest, combineLatestWith, map, switchMap } from 'rxjs';
 import { WalletsService } from '../../services/wallets/wallets.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OptionStock } from '../../models/option-stock';
 
 const ELEMENT_DATA: SimulationStock[] = [
@@ -128,7 +128,7 @@ const WALLET: Wallet = {
     CurrencyMaskModule
   ]
 })
-export class SimulationComponent implements AfterViewInit {
+export class SimulationComponent implements OnInit {
   displayedColumns = ['stock', 'price', 'percentage', 'quantity'];
   dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
 
@@ -139,15 +139,18 @@ export class SimulationComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private store: Store<AppState>, private walletService: WalletsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute, private router: Router
   ) {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.router.events.subscribe((event) => {
+      this.id = this.route.snapshot.paramMap.get('id');
+      this.initializeData();
+    });
+  }
+  ngOnInit(): void {
+
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
+  initializeData(){
     this.store.dispatch(loadWallets());
     this.store.dispatch(loadStocksContainer());
 
@@ -172,6 +175,7 @@ export class SimulationComponent implements AfterViewInit {
     var currentWallet = wallets.find(x => x.id === this.id);
     if (currentWallet === null || currentWallet === undefined){
       this.store.dispatch(addTitle({ currentTitle: 'Simulador de investimentos' }));
+      return;
     }
 
     this.store.dispatch(addTitle({ currentTitle: `Simulador de investimentos - ${currentWallet!.title}` }));

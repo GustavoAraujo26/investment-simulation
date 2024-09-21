@@ -29,13 +29,15 @@ export class SidenavMenuComponent implements OnInit {
   simulationMenuId: string = uuidv4();
 
   constructor(private router: Router, private store: Store<AppState>) {
-    this.store.select(selectWallets).subscribe(value => this.updateSimulationMenuItems(value));
-    this.store.dispatch(loadWallets());
+
   }
 
   ngOnInit() {
     this.createMenus();
     this.checkActiveRoute();
+
+    this.store.select(selectWallets).subscribe(value => this.updateSimulationMenuItems(value));
+    this.store.dispatch(loadWallets());
   }
 
   createMenus() {
