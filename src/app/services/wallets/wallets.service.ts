@@ -130,4 +130,15 @@ export class WalletsService {
 
     return Math.round(totalQuantity / price);
   }
+
+  calculateTotalCost(stocks: SimulationStock[]): number {
+    var total: number = 0;
+
+    stocks.forEach(x => {
+      var stockCost = Number((x.price * x.quantity).toFixed(2));
+      total += stockCost;
+    });
+
+    return total;
+  }
 }

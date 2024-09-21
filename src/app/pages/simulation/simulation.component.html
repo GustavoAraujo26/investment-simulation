@@ -19,6 +19,12 @@
 <br/>
 <mat-card>
   <mat-card-content>
+    <div *ngIf="totalCost !== null && totalCost !== undefined && totalCost !== 0">
+      <h3 class="total-cost-text">
+        Custo aproximado:
+        <span class="total-cost-value">{{totalCost | currency : 'BRL'}}</span>
+      </h3>
+    </div>
     <div style="overflow: auto; max-width: 100%;">
       <table class="full-width" mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="stock" sticky>

@@ -135,6 +135,7 @@ export class SimulationComponent implements OnInit {
 
   id: string | null = null;
   simulationValue: number | null = null;
+  totalCost: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -153,6 +154,7 @@ export class SimulationComponent implements OnInit {
 
   initializeData(){
     this.simulationValue = null;
+    this.totalCost = null;
     this.store.dispatch(loadWallets());
     this.store.dispatch(loadStocksContainer());
 
@@ -188,6 +190,7 @@ export class SimulationComponent implements OnInit {
       return;
 
     var calculatedStocks = this.walletService.calculateStocks(this.simulationValue!, this.dataSource.data);
+    this.totalCost = this.walletService.calculateTotalCost(calculatedStocks);
     this.updateDataSource(calculatedStocks);
   }
 
