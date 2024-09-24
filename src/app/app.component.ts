@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { EventType, Router, RouterOutlet } from '@angular/router';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -17,6 +17,7 @@ import { selectLoading } from './state/loading/loading.selector';
 import { loadLoading } from './state/loading/loading.actions';
 import { NgxLoadingModule } from 'ngx-loading';
 import { StocksContainerService } from './services/stocks-container/stocks-container.service';
+import { TitleToolbarComponent } from './components/title-toolbar/title-toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -30,22 +31,26 @@ import { StocksContainerService } from './services/stocks-container/stocks-conta
     MatToolbarModule,
     MatDividerModule,
     SidenavMenuComponent,
-    NgxLoadingModule
+    NgxLoadingModule,
+    TitleToolbarComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  sidenavOpened: boolean = true;
-  public title$: Observable<string>;
+  @ViewChild('sidenav', {static: false}) sidenav!: MatSidenav;
+
+  sidenavOpened: boolean = false;
+  public title: string = 'Simulador de Investimentos';
 
   public isLoading: boolean = false;
 
   constructor(private deviceService: DeviceDetectorService, private store: Store<AppState>,
-    private stocksContainerService: StocksContainerService
+    private stocksContainerService: StocksContainerService, private router: Router
   ) {
-    this.title$ = this.store.select(selectTitle);
-    this.store.dispatch(loadTitle());
+    this.store.select(selectTitle).subscribe(value => {
+      this.title = value;
+    });
 
     this.store.select(selectLoading).subscribe(value => this.isLoading = value);
     this.store.dispatch(loadLoading());
@@ -55,5 +60,17 @@ export class AppComponent {
 
   ngOnInit() {
     this.sidenavOpened = this.deviceService.isDesktop();
+
+    this.router.events.subscribe((event) => {
+      if (event.type !== EventType.NavigationEnd)
+        return;
+
+      if (this.sidenav.opened && !this.deviceService.isDesktop())
+        this.sidenav.toggle();
+    });
+  }
+
+  toggleMenu() {
+    this.sidenav.toggle();
   }
 }

@@ -6,12 +6,7 @@
     <app-sidenav-menu></app-sidenav-menu>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="secondary">
-      <button mat-icon-button aria-label="Menu" (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>{{ (title$ | async) }}</span>
-    </mat-toolbar>
+    <app-title-toolbar [title]="title" (toogleSideNav)="toggleMenu()"></app-title-toolbar>
     <div class="main">
       <router-outlet />
     </div>

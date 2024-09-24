@@ -25,7 +25,7 @@ import { loadWallets } from '../../state/wallets/wallets.actions';
 import { selectWallets } from '../../state/wallets/wallets.selector';
 import { combineLatest, combineLatestWith, map, switchMap } from 'rxjs';
 import { WalletsService } from '../../services/wallets/wallets.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, EventType, Router } from '@angular/router';
 import { OptionStock } from '../../models/option-stock';
 import Swal from 'sweetalert2';
 
@@ -145,7 +145,8 @@ export class SimulationComponent implements OnInit {
   ) {
     this.router.events.subscribe((event) => {
       this.id = this.route.snapshot.paramMap.get('id');
-      this.initializeData();
+      if (this.checkCurrentRoute(this.id, event.type))
+        this.initializeData();
     });
   }
   ngOnInit(): void {
@@ -205,5 +206,10 @@ export class SimulationComponent implements OnInit {
     }
 
     return true;
+  }
+
+  checkCurrentRoute(id: string | null, eventType: EventType): boolean {
+    var isSameRoute = this.router.url.toLowerCase().includes(`/investment/simulation/${id}`);
+    return isSameRoute && eventType == EventType.NavigationEnd;
   }
 }
