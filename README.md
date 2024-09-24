@@ -25,3 +25,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+Comando para executar o build:
+ng build --configuration=production --base-href https://gustavoaraujo26.github.io/investment-simulation/
+
+Comando para subir a branch de publicação:
+angular-cli-ghpages --dir=dist/investment-simulation/browser
