@@ -28,83 +28,7 @@ import { WalletsService } from '../../services/wallets/wallets.service';
 import { ActivatedRoute, EventType, Router } from '@angular/router';
 import { OptionStock } from '../../models/option-stock';
 import Swal from 'sweetalert2';
-
-const ELEMENT_DATA: SimulationStock[] = [
-  {
-    stock: {
-      code: 'MRSA3BF',
-      name: 'MRS LOGISTICA',
-      logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 120.03,
-    quantity: 74
-  },
-  {
-    stock: {
-      code: 'GDBR34',
-      name: 'GEN DYNAMICSDRN',
-      logo: 'https://s3-symbol-logo.tradingview.com/general-dynamics--big.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 87.58,
-    quantity: 12
-  },
-  {
-    stock: {
-      code: 'BCPX39',
-      name: 'GX COPPER MNDRE',
-      logo: 'https://s3-symbol-logo.tradingview.com/global-x--big.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 65.74,
-    quantity: 35
-  },
-  {
-    stock: {
-      code: 'SHOP11',
-      name: 'FII MULTSHOPCI',
-      logo: 'https://brapi.dev/favicon.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 74.25,
-    quantity: 17
-  },
-  {
-    stock: {
-      code: 'P1NR34',
-      name: 'PENTAIR PLC DRN',
-      logo: 'https://s3-symbol-logo.tradingview.com/pentair--big.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 9.96,
-    quantity: 15
-  },
-  {
-    stock: {
-      code: 'MRSA3BF',
-      name: 'MRS LOGISTICA',
-      logo: 'https://s3-symbol-logo.tradingview.com/mrs-logistica--big.svg',
-      percentage: 20,
-      type: 'stock'
-    },
-    price: 69.78,
-    quantity: 5
-  }
-];
-
-const WALLET: Wallet = {
-  id: uuidv4(),
-  title: 'Wallet 1',
-  observation: 'Test',
-  active: true,
-  stocks: []
-}
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-simulation',
@@ -136,16 +60,20 @@ export class SimulationComponent implements OnInit {
   id: string | null = null;
   simulationValue: number | null = null;
   totalCost: number | null = null;
+  loadData: boolean = true;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private store: Store<AppState>, private walletService: WalletsService,
-    private route: ActivatedRoute, private router: Router
+    private route: ActivatedRoute, private router: Router, private deviceService: DeviceDetectorService
   ) {
     this.router.events.subscribe((event) => {
+      if (event.type !== EventType.NavigationEnd)
+        return;
+
       this.id = this.route.snapshot.paramMap.get('id');
-      if (this.checkCurrentRoute(this.id, event.type))
+      if (this.checkCurrentRoute(this.id, event.url))
         this.initializeData();
     });
   }
@@ -154,6 +82,7 @@ export class SimulationComponent implements OnInit {
   }
 
   initializeData(){
+    this.loadData = true;
     this.simulationValue = null;
     this.totalCost = null;
     this.store.dispatch(loadWallets());
@@ -164,9 +93,13 @@ export class SimulationComponent implements OnInit {
         this.store.select(selectStocksContainer)
       )
     ).subscribe(([wallets, stockContainer]) => {
+      if (!this.loadData)
+        return;
+
       var simulationStocks = this.walletService.convertToSimulation(this.id!, wallets, stockContainer.stocks);
       this.updateDataSource(simulationStocks);
       this.getWalletTitle(wallets);
+      this.loadData = false;
     });
   }
 
@@ -183,7 +116,11 @@ export class SimulationComponent implements OnInit {
       return;
     }
 
-    this.store.dispatch(addTitle({ currentTitle: `Simulador de investimentos - ${currentWallet!.title}` }));
+    var title = `Simulador de investimentos - ${currentWallet!.title}`;
+    if (this.deviceService.isMobile())
+      title = currentWallet!.title;
+
+    this.store.dispatch(addTitle({ currentTitle: title }));
   }
 
   calculate() {
@@ -208,8 +145,7 @@ export class SimulationComponent implements OnInit {
     return true;
   }
 
-  checkCurrentRoute(id: string | null, eventType: EventType): boolean {
-    var isSameRoute = this.router.url.toLowerCase().includes(`/investment/simulation/${id}`);
-    return isSameRoute && eventType == EventType.NavigationEnd;
+  checkCurrentRoute(id: string | null, url: string): boolean {
+    return url.toLowerCase().includes(`/investment/simulation/${id}`);
   }
 }
