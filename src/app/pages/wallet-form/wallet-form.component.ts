@@ -222,20 +222,21 @@ export class WalletFormComponent implements AfterViewInit {
   }
 
   pushStock() {
-    const data = this.getStocksFromDataSource();
+    var data = this.getStocksFromDataSource();
 
     var stockIndex = this.checkStockInDataSource(this.selectedWalletStock!.code);
-    if (stockIndex === 0){
+    if (stockIndex === -1){
       data.push(this.selectedWalletStock!);
     }
     else{
-      data[stockIndex] = {
+      data = data.filter(x => x.code !== this.selectedWalletStock!.code);
+      data.splice(stockIndex, 0, {
         code: this.selectedWalletStock!.code,
         name: this.selectedWalletStock!.name,
         logo: this.selectedWalletStock!.logo,
         type: this.selectedWalletStock!.type,
         percentage: this.selectedWalletStock!.percentage
-      };
+      });
     }
 
     this.updateDataSourceStocks(data);
@@ -256,7 +257,7 @@ export class WalletFormComponent implements AfterViewInit {
 
     var selectedStock = stocks.find(x => x.code === code);
     if (selectedStock === null || selectedStock === undefined)
-      return 0;
+      return -1;
 
     return stocks.indexOf(selectedStock);
   }
