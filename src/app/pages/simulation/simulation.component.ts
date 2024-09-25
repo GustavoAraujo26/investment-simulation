@@ -29,6 +29,7 @@ import { ActivatedRoute, EventType, Router } from '@angular/router';
 import { OptionStock } from '../../models/option-stock';
 import Swal from 'sweetalert2';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { SimulationTableComponent } from '../../components/simulation-table/simulation-table.component';
 
 @Component({
   selector: 'app-simulation',
@@ -50,20 +51,17 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     CurrencyPipe,
     FormsModule,
     StockCodeDisplayComponent,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    SimulationTableComponent
   ]
 })
 export class SimulationComponent implements OnInit {
-  displayedColumns = ['stock', 'price', 'percentage', 'quantity'];
-  dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
 
   id: string | null = null;
   simulationValue: number | null = null;
   totalCost: number | null = null;
   loadData: boolean = true;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  stocks: SimulationStock[] = [];
 
   constructor(private store: Store<AppState>, private walletService: WalletsService,
     private route: ActivatedRoute, private router: Router, private deviceService: DeviceDetectorService
@@ -96,17 +94,10 @@ export class SimulationComponent implements OnInit {
       if (!this.loadData)
         return;
 
-      var simulationStocks = this.walletService.convertToSimulation(this.id!, wallets, stockContainer.stocks);
-      this.updateDataSource(simulationStocks);
+      this.stocks = this.walletService.convertToSimulation(this.id!, wallets, stockContainer.stocks);
       this.getWalletTitle(wallets);
       this.loadData = false;
     });
-  }
-
-  updateDataSource(stocks: SimulationStock[]) {
-    this.dataSource = new MatTableDataSource(stocks);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   getWalletTitle(wallets: Wallet[]) {
@@ -127,9 +118,8 @@ export class SimulationComponent implements OnInit {
     if (!this.validateSimulationValue())
       return;
 
-    var calculatedStocks = this.walletService.calculateStocks(this.simulationValue!, this.dataSource.data);
-    this.totalCost = this.walletService.calculateTotalCost(calculatedStocks);
-    this.updateDataSource(calculatedStocks);
+    this.stocks = this.walletService.calculateStocks(this.simulationValue!, this.stocks);
+    this.totalCost = this.walletService.calculateTotalCost(this.stocks);
   }
 
   validateSimulationValue(): boolean {
