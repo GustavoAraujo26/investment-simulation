@@ -20,114 +20,6 @@ import { changeWalletStatus, deleteWallet, loadWallets, saveWallet } from '../..
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-const ELEMENT_DATA: Wallet[] =[
-  {
-    id: uuidv4(),
-    title: 'Wallet 1',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 2',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 3',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 4',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 5',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 1',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 2',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 3',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 4',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 5',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 1',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 2',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 3',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 4',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-  {
-    id: uuidv4(),
-    title: 'Wallet 5',
-    observation: 'Test',
-    active: true,
-    stocks: []
-  },
-];
-
 @Component({
   selector: 'app-wallet-dashboard',
   templateUrl: './wallet-dashboard.component.html',
@@ -149,14 +41,13 @@ const ELEMENT_DATA: Wallet[] =[
 })
 export class WalletDashboardComponent implements AfterViewInit {
   displayedColumns = ["title", "observation", "active", "actions"];
-  dataSource: MatTableDataSource<Wallet>;
+  dataSource: MatTableDataSource<Wallet> = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private store: Store<AppState>, private router: Router) {
     this.store.dispatch(addTitle({ currentTitle: 'Lista de carteiras de investimentos' }));
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
   }
 
   ngAfterViewInit() {

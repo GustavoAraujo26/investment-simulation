@@ -3,13 +3,16 @@ import { Store, StoreModule } from '@ngrx/store';
 import { titleReducer } from '../../state/title/title.reducer';
 import { AppState } from '../../state/app.state';
 import { addTitle } from '../../state/title/title.actions';
+import { StockCarouselComponent } from '../../components/stock-carousel/stock-carousel.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: []
+  imports: [
+    StockCarouselComponent
+  ]
 })
 export class HomeComponent implements OnInit {
 
