@@ -13,44 +13,50 @@
         </button>
       </div>
     </div>
-    <br/>
-    <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
-        <td mat-cell *matCellDef="let row">{{row.title}}</td>
-      </ng-container>
-      <ng-container matColumnDef="observation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Observação</th>
-        <td mat-cell *matCellDef="let row" class="observation-column">{{row.observation}}</td>
-      </ng-container>
-      <ng-container matColumnDef="active">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo?</th>
-        <td mat-cell *matCellDef="let row">
-          <mat-icon class="icon-clickable" fontIcon="check_circle"
-            color="accent" *ngIf="row.active" (click)="toogleWalletStatus(row)"></mat-icon>
-          <mat-icon class="icon-clickable" fontIcon="radio_button_unchecked"
-            color="warn" *ngIf="!row.active" (click)="toogleWalletStatus(row)"></mat-icon>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ações</th>
-        <td mat-cell *matCellDef="let row">
-          <app-table-actions (onEdit)="editWallet(row.id)" (onDelete)="eraseWallet(row)"></app-table-actions>
-          &nbsp;
-          <button mat-mini-fab color="primary" aria-label="Simular" matTooltip="Simular aporte"
-            (click)="simulateWallet(row.id)" *ngIf="row.active">
-            <mat-icon>calculate</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+  </mat-card-content>
+</mat-card>
+<br/>
+<mat-card>
+  <mat-card-content>
+    <div class="wallet-table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Título</th>
+          <td mat-cell *matCellDef="let row">{{row.title}}</td>
+        </ng-container>
+        <ng-container matColumnDef="observation">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Observação</th>
+          <td mat-cell *matCellDef="let row" class="observation-column">{{row.observation}}</td>
+        </ng-container>
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo?</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-icon class="icon-clickable" fontIcon="check_circle"
+              color="accent" *ngIf="row.active" (click)="toogleWalletStatus(row)"></mat-icon>
+            <mat-icon class="icon-clickable" fontIcon="radio_button_unchecked"
+              color="warn" *ngIf="!row.active" (click)="toogleWalletStatus(row)"></mat-icon>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Ações</th>
+          <td mat-cell *matCellDef="let row">
+            <app-table-actions (onEdit)="editWallet(row.id)" (onDelete)="eraseWallet(row)"></app-table-actions>
+            &nbsp;
+            <button class="table-btn-margin" mat-mini-fab color="primary" aria-label="Simular" matTooltip="Simular aporte"
+              (click)="simulateWallet(row.id)" *ngIf="row.active">
+              <mat-icon>calculate</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">Nenhum dado encontrado para o filtro "{{input.value}}"</td>
-      </tr>
-    </table>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Nenhum dado encontrado para o filtro "{{input.value}}"</td>
+        </tr>
+      </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of wallets"></mat-paginator>
   </mat-card-content>
 </mat-card>

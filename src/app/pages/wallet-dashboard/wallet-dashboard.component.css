@@ -11,3 +11,8 @@
 .icon-clickable {
   cursor: pointer;
 }
+
+.wallet-table-container {
+  overflow: auto;
+  max-width: 100%;
+}
