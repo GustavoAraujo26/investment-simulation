@@ -9,3 +9,17 @@
 .presentation-text-container {
   padding: 20px;
 }
+
+.stepper-foward-button {
+  float: right;
+}
+
+.stepper-previous-button {
+  float: left;
+}
+
+.presentation-info {
+  font-weight: bold;
+  font-style: italic;
+  color: #d4072d;
+}

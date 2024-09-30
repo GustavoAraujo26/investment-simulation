@@ -1,11 +1,11 @@
 <mat-list>
   <mat-list-item>
     <div matListItemIcon>
-      <img alt="row.name" class="stock-img" [src]="logo" [height]="logoHeight"/>
+      <img alt="row.name" class="stock-img" [src]="logo" [height]="logoHeight" [matTooltip]="name"/>
     </div>
-    <div matListItemTitle class="stock-code">{{code}}</div>
-    <div matListItemLine class="stock-name">{{name}}</div>
-    <div matListItemLine [ngClass]="typeContainerLayoutClass" *ngIf="typeShow">
+    <div matListItemTitle class="stock-code" [matTooltip]="code">{{code}}</div>
+    <div matListItemLine class="stock-name" [matTooltip]="name">{{name}}</div>
+    <div matListItemLine [ngClass]="typeContainerLayoutClass" *ngIf="typeShow" [matTooltip]="typeText">
       {{typeText}}
     </div>
   </mat-list-item>

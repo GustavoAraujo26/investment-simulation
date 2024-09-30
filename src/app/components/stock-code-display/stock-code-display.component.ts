@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import {MatListModule} from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-stock-code-display',
@@ -9,7 +10,8 @@ import {MatListModule} from '@angular/material/list';
   standalone: true,
   imports: [
     MatListModule,
-    CommonModule
+    CommonModule,
+    MatTooltipModule
   ]
 })
 export class StockCodeDisplayComponent implements OnInit {

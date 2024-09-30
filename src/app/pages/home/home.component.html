@@ -32,4 +32,71 @@
     </mat-card>
   </div>
 </div>
+<br/>
+<mat-stepper [orientation]="stepperOrientation">
+  <mat-step label="Crie sua carteira" state="wallet">
+    <p class="presentation-text">
+      Crie sua carteira de investimentos, selecionando os ativos que compõem,
+      além de informar o peso (porcentagem de participação) de cada ativo.
+    </p>
+    <p class="presentation-text">
+      Crie uma carteira mista, só de ações, só de fundos ou somente BDR's.
+    </p>
+    <p class="presentation-text">
+      Para efetuar a criação, no menu lateral esquerdo do site clique em "Criar carteira",
+      ou na tela de gerenciamento de carteiras, clique no botão verde no canto superior direito.
+    </p>
+    <button class="stepper-foward-button" mat-button matStepperNext>
+      <mat-icon>arrow_forward_ios</mat-icon>
+      Próximo
+    </button>
+  </mat-step>
+  <mat-step label="Gerencie suas carteiras" state="walletdashboard">
+    <p class="presentation-text">
+      Gerencie todas as suas carteiras através do dashbord de carteiras de investimento. Nessa tela é possível:
+    </p>
+    <ul>
+      <li>Habilitar/Desabilitar uma carteira;</li>
+      <li>Editar uma carteira;</li>
+      <li>Apagar uma carteira;</li>
+      <li>Ser redirecionado para o simulador de investimentos da carteira selecionada.</li>
+    </ul>
+    <p class="presentation-text">
+      Como atalho de acesso a tela, no menu lateral esquerdo, clique em "Carteiras".
+    </p>
+    <button class="stepper-previous-button" mat-button matStepperPrevious>
+      <mat-icon>arrow_back_ios</mat-icon>
+      Anterior
+    </button>
+    <button class="stepper-foward-button" mat-button matStepperNext>
+      <mat-icon>arrow_forward_ios</mat-icon>
+      Próximo
+    </button>
+  </mat-step>
+  <mat-step label="Simule seus investimentos" state="simulation">
+    <p class="presentation-text">
+      Simule aportes de investimento nas suas carteiras, através dessa calculadora. Nela é possível visualizar
+      o valor de fechamento do dia anterior do ativo, a quantidade a ser comprada, além do valor aproximado a ser gasto na sua
+      corretora.
+    </p>
+    <p class="presentation-text">
+      Vale ressaltar que o valor aproximado a ser gasto na aquisição das cotas <span class="presentation-info">não contempla possíveis gastos
+        na corretora/banco</span> no qual tenha conta.
+    </p>
+    <button mat-button matStepperPrevious>
+      <mat-icon>arrow_back_ios</mat-icon>
+      Anterior
+    </button>
+  </mat-step>
+
+  <ng-template matStepperIcon="wallet">
+    <mat-icon>wallet</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="walletdashboard">
+    <mat-icon>backup_table</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="simulation">
+    <mat-icon>attach_money</mat-icon>
+  </ng-template>
+</mat-stepper>
 <app-stock-carousel></app-stock-carousel>
