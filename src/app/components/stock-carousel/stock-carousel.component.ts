@@ -36,7 +36,7 @@ export class StockCarouselComponent implements OnInit {
   stocks: OptionStock[] = [];
   carouselStocks: OptionStock[] = [];
 
-  carouselInterval: number = 1000;
+  carouselInterval: number = 2000;
   startIndex: number = 0;
   carouselItemCount: number = 5;
   carouselSubscription: Subscription | null = null;
