@@ -19,12 +19,12 @@
 
 .left-button-phone {
   float: left;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .right-button-phone {
   float: right;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 
 .action-buttons-container {
