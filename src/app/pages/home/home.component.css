@@ -1,0 +1,11 @@
+.text-center {
+  text-align: center;
+}
+
+.presentation-text {
+  text-align: justify;
+}
+
+.presentation-text-container {
+  padding: 20px;
+}
