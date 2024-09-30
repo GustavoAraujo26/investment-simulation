@@ -36,13 +36,16 @@ export class StockCarouselComponent implements OnInit {
   stocks: OptionStock[] = [];
   carouselStocks: OptionStock[] = [];
 
-  carouselInterval: number = 5000;
+  carouselInterval: number = 2000;
   startIndex: number = 0;
   carouselItemCount: number = 5;
   carouselSubscription: Subscription | null = null;
+  mobileDevice: boolean = false;
 
   constructor(private store: Store<AppState>, private deviceService: DeviceDetectorService) {
-    if (this.deviceService.isMobile()){
+    this.mobileDevice = this.deviceService.isMobile();
+
+    if (this.mobileDevice){
       this.carouselItemCount = 1;
     }
 

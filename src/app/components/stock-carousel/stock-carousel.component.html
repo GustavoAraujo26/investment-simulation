@@ -8,24 +8,54 @@
 </div>
 <mat-divider></mat-divider>
 <br/>
-<div class="mdl-grid" *ngIf="carouselStocks.length > 0">
-  <div class="mdl-cell mdl-cell--1-col mdl-cell--1-col-phone">
-    <button>P</button>
+<div class="mdl-grid" *ngIf="carouselStocks.length > 0 && !mobileDevice">
+  <div class="mdl-cell mdl-cell--1-col mdl-cell--1-col-phone action-buttons-container" *ngIf="!mobileDevice">
+    <button mat-fab color="accent" aria-label="Voltar para o ativo anterior" class="action-button-desktop">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
   </div>
   @for(stock of carouselStocks; track stock){
-    <div class="mdl-cell mdl-cell--2-col mdl-cell--3-col-phone">
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--10-col-phone">
       <mat-card>
         <mat-card-content>
           <app-stock-code-display [code]="stock.code" [name]="stock.name" [logo]="stock.logo!" logoHeight="50" [type]="stock.type"></app-stock-code-display>
           <div class="carousel-price">
-            <h3>{{stock.price | currency : 'BRL'}}</h3>
+            <div class="mdl-chip mdl-color--teal">
+              <h3>{{stock.price | currency : 'BRL'}}</h3>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   }
-  <div class="mdl-cell mdl-cell--1-col mdl-cell--1-col-phone">
-    <button>P</button>
+  <div class="mdl-cell mdl-cell--1-col mdl-cell--1-col-phone action-buttons-container" *ngIf="!mobileDevice">
+    <button mat-fab color="accent" aria-label="ir para o próximo ativo" class="action-button-desktop">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
   </div>
 </div>
 <mat-progress-bar mode="indeterminate" *ngIf="carouselStocks.length === 0"></mat-progress-bar>
+<div class="mdl-grid" *ngIf="mobileDevice && carouselStocks.length > 0">
+  <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-phone action-buttons-container">
+    <button mat-fab color="accent" aria-label="Voltar para o ativo anterior" class="left-button-phone">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <div style="width: 80%;">
+      @for(stock of carouselStocks; track stock) {
+        <mat-card>
+          <mat-card-content>
+            <app-stock-code-display [code]="stock.code" [name]="stock.name" [logo]="stock.logo!" logoHeight="50" [type]="stock.type"></app-stock-code-display>
+            <div class="carousel-price">
+              <div class="mdl-chip mdl-color--teal">
+                <h3>{{stock.price | currency : 'BRL'}}</h3>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+    <button mat-fab color="accent" aria-label="ir para o próximo ativo" class="right-button-phone">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
+  </div>
+</div>

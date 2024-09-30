@@ -14,4 +14,25 @@
 .carousel-price {
   text-align: center;
   justify-content: center;
+  font-weight: bold;
+}
+
+.left-button-phone {
+  float: left;
+  margin-right: 10px;
+}
+
+.right-button-phone {
+  float: right;
+  margin-left: 10px;
+}
+
+.action-buttons-container {
+  display: flex;
+  align-items: center;
+}
+
+.action-button-desktop {
+  margin: 0 auto;
+  display: block;
 }
