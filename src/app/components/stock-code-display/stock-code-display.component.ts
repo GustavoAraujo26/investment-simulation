@@ -22,15 +22,36 @@ export class StockCodeDisplayComponent implements OnInit {
 
   @Input() logo!: string;
   @Input() code!: string;
-  @Input() name!: string;
+  @Input() name?: string;
   @Input() logoHeight!: string;
   @Input() type?: string;
+
+  imgTooltip: string = '';
+  nameFilled: boolean = false;
 
   constructor() {
 
   }
 
   ngOnInit() {
+    this.initializeVariables();
+  }
 
+  ngOnChanges() {
+    this.initializeVariables();
+  }
+
+  initializeVariables() {
+    this.nameFilled = this.checkName();
+    if (this.nameFilled){
+      this.imgTooltip = `${this.code} - ${this.name}`;
+    }
+    else{
+      this.imgTooltip = this.code;
+    }
+  }
+
+  checkName(): boolean {
+    return this.name !== null && this.name !== undefined && this.name !== '';
   }
 }

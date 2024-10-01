@@ -1,6 +1,6 @@
 <div class="stock-basic-data">
-  <img alt="row.name" class="stock-img" [src]="logo" [height]="logoHeight" [matTooltip]="code + ' - ' + name"/>
+  <img alt="row.name" class="stock-img" [src]="logo" [height]="logoHeight" [matTooltip]="imgTooltip"/>
   <p class="stock-code">{{code}}</p>
-  <p class="stock-name">{{name}}</p>
+  <p class="stock-name" *ngIf="nameFilled">{{name}}</p>
 </div>
 <app-stock-type-chip [type]="type"></app-stock-type-chip>

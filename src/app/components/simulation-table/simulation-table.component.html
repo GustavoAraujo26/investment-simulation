@@ -4,7 +4,7 @@
       <th mat-header-cell *matHeaderCellDef>Ativo</th>
       <td mat-cell *matCellDef="let row">
         <app-stock-code-display [logo]="row.stock.logo!" logoHeight="50"
-              [code]="row.stock.code" [name]="row.stock.name" [type]="row.stock.type"></app-stock-code-display>
+              [code]="row.stock.code"></app-stock-code-display>
       </td>
     </ng-container>
     <ng-container matColumnDef="price">
