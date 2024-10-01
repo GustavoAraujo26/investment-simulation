@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatChipsModule} from '@angular/material/chips';
+import { StockTypeChipComponent } from '../stock-type-chip/stock-type-chip.component';
 
 @Component({
   selector: 'app-stock-code-display',
@@ -11,7 +13,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     MatListModule,
     CommonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule,
+    StockTypeChipComponent
   ]
 })
 export class StockCodeDisplayComponent implements OnInit {
@@ -20,51 +24,13 @@ export class StockCodeDisplayComponent implements OnInit {
   @Input() code!: string;
   @Input() name!: string;
   @Input() logoHeight!: string;
-  @Input() type!: string;
-
-  typeContainerLayoutClass: string = '';
-  typeText: string = '';
-  typeShow: boolean = true;
+  @Input() type?: string;
 
   constructor() {
 
   }
 
   ngOnInit() {
-    this.pickTypeColor();
-  }
 
-  ngOnChanges() {
-    this.pickTypeColor();
-  }
-
-  pickTypeColor() {
-    if (this.type === null || this.type === undefined || this.type === ''){
-      this.typeContainerLayoutClass = '';
-      this.typeShow = false;
-      this.typeText = '';
-      return;
-    }
-
-    if (this.type === 'stock'){
-      this.typeContainerLayoutClass = 'type-stock-bg type-badge';
-      this.typeShow = true;
-      this.typeText = 'Ação';
-      return;
-    }
-
-    if (this.type === 'bdr'){
-      this.typeContainerLayoutClass = 'type-bdr-bg type-badge';
-      this.typeShow = true;
-      this.typeText = 'BDR';
-      return;
-    }
-
-    if (this.type === 'fund'){
-      this.typeContainerLayoutClass = 'type-fund-bg type-badge';
-      this.typeShow = true;
-      this.typeText = 'Fundo';
-      return;
-    }
   }
 }

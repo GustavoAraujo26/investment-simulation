@@ -12,9 +12,16 @@
 }
 
 .carousel-price {
+  width: 100%;
   text-align: center;
+  align-content: center;
+  padding-top: 10px;
   justify-content: center;
+}
+
+.carousel-price-text {
   font-weight: bold;
+  font-size: 15px;
 }
 
 .left-button-phone {

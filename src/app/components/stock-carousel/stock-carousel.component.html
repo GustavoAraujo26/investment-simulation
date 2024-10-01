@@ -17,9 +17,7 @@
           <mat-card-content>
             <app-stock-code-display [code]="stock.code" [name]="stock.name" [logo]="stock.logo!" logoHeight="50" [type]="stock.type"></app-stock-code-display>
             <div class="carousel-price">
-              <div class="mdl-chip mdl-color--teal">
-                <h3>{{stock.price | currency : 'BRL'}}</h3>
-              </div>
+              <h3 class="mdl-color-text--green-200 carousel-price-text">{{stock.price | currency : 'BRL'}}</h3>
             </div>
           </mat-card-content>
         </mat-card>
@@ -36,15 +34,10 @@
     <mat-card-content>
       @for(stock of carouselStocks; track stock) {
         <app-stock-code-display [code]="stock.code" [name]="stock.name" [logo]="stock.logo!" logoHeight="50" [type]="stock.type"></app-stock-code-display>
-            <div class="carousel-price">
-              <div class="mdl-chip mdl-color--teal">
-                <h3>{{stock.price | currency : 'BRL'}}</h3>
-              </div>
-            </div>
+        <div class="carousel-price">
+          <h3 class="mdl-color-text--green-200 carousel-price-text">{{stock.price | currency : 'BRL'}}</h3>
+        </div>
       }
-      <br/>
-      <mat-divider></mat-divider>
-      <br/>
       <button mat-fab color="accent" aria-label="Voltar para o ativo anterior" class="left-button-phone" (click)="goToLeft()">
         <mat-icon>arrow_back_ios</mat-icon>
       </button>
