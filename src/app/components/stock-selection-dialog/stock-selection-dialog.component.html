@@ -4,39 +4,66 @@
     <mat-label>Filtro</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex.: PETR4" #input/>
   </mat-form-field>
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="logo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Logo</th>
-      <td mat-cell *matCellDef="let row">
-        <img alt="row.name" class="option-stock-img" [src]="row.logo" height="25" />
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="code">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
-      <td mat-cell *matCellDef="let row">{{row.code}}</td>
-    </ng-container>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-      <td mat-cell *matCellDef="let row" class="option-stock-name">{{row.name}}</td>
-    </ng-container>
-    <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço</th>
-      <td mat-cell *matCellDef="let row">{{row.price | currency: 'BRL'}}</td>
-    </ng-container>
-    <ng-container matColumnDef="selection">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Seleção</th>
-      <td mat-cell *matCellDef="let row">
-        <button mat-flat-button color="primary" (click)="selectStock(row)">Selecionar</button>
-      </td>
-    </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  @if (isMobile){
+    <mat-accordion *ngFor="let row of obs | async; let i = index">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <img alt="row.name" class="option-stock-img" [src]="row.logo" height="25" />
+            {{row.code}}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{row.price | currency: 'BRL'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="5">Nenhum dado encontrado para o filtro "{{input.value}}"</td>
-    </tr>
-  </table>
+        <app-stock-code-display [logo]="row.logo!" logoHeight="50"
+                [code]="row.code" [name]="row.name" [type]="row.type"></app-stock-code-display>
+
+        <div style="text-align: center;">
+          <button mat-flat-button color="primary" (click)="selectStock(row)">Selecionar</button>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+    <br/>
+  }
+  @else {
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="logo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Logo</th>
+        <td mat-cell *matCellDef="let row">
+          <img alt="row.name" class="option-stock-img" [src]="row.logo" height="25" />
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+        <td mat-cell *matCellDef="let row">{{row.code}}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td mat-cell *matCellDef="let row" class="option-stock-name">{{row.name}}</td>
+      </ng-container>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço</th>
+        <td mat-cell *matCellDef="let row">{{row.price | currency: 'BRL'}}</td>
+      </ng-container>
+      <ng-container matColumnDef="selection">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Seleção</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-flat-button color="primary" (click)="selectStock(row)">Selecionar</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5">Nenhum dado encontrado para o filtro "{{input.value}}"</td>
+      </tr>
+    </table>
+  }
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of stocks"></mat-paginator>
 </mat-dialog-content>
 <mat-dialog-actions style="justify-content: right;">

@@ -41,7 +41,7 @@ export class SimulationTableComponent implements OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns = ['stock', 'percentage', 'percentage', 'quantity'];
+  displayedColumns = ['stock', 'price', 'percentage', 'quantity'];
   dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
   obs: Observable<SimulationStock[]> | null = null;
 

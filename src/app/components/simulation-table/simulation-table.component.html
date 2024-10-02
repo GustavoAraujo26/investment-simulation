@@ -4,6 +4,8 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
+            <img alt="row.name" class="option-stock-img" [src]="row.stock.logo" height="25" />
+            &nbsp;
             {{row.stock.code}}
           </mat-panel-title>
           <mat-panel-description *ngIf="row.stock.percentage !== null">

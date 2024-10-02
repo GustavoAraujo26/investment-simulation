@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Inject, ChangeDetectorRef } from '@angular/core';
 import { OptionStock } from '../../models/option-stock';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
@@ -7,11 +7,15 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
-import {CurrencyPipe} from '@angular/common';
+import {CommonModule, CurrencyPipe} from '@angular/common';
 import { AppState } from '../../state/app.state';
 import { Store } from '@ngrx/store';
 import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
 import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
+import { Observable } from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { StockCodeDisplayComponent } from '../stock-code-display/stock-code-display.component';
 
 @Component({
   selector: 'app-stock-selection-dialog',
@@ -26,13 +30,18 @@ import { loadStocksContainer } from '../../state/stocks-container/stocks-contain
     MatFormFieldModule,
     MatDialogModule,
     MatButtonModule,
-    CurrencyPipe
+    CurrencyPipe,
+    MatExpansionModule,
+    StockCodeDisplayComponent,
+    CommonModule
   ]
 })
 export class StockSelectionDialogComponent implements AfterViewInit {
 
   displayedColumns: string[] = [ 'logo', 'code', 'name', 'price', 'selection' ];
   dataSource: MatTableDataSource<OptionStock>;
+  obs: Observable<OptionStock[]> | null = null;
+  isMobile: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -40,9 +49,12 @@ export class StockSelectionDialogComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<StockSelectionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: string,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private deviceService: DeviceDetectorService,
+    private cd: ChangeDetectorRef
   ){
     this.dataSource = new MatTableDataSource();
+    this.isMobile = deviceService.isMobile();
   }
 
   ngAfterViewInit() {
@@ -50,6 +62,11 @@ export class StockSelectionDialogComponent implements AfterViewInit {
       this.dataSource = new MatTableDataSource(value.stocks);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      if (this.isMobile){
+        this.obs = this.dataSource.connect();
+        this.cd.detectChanges();
+      }
     });
     this.store.dispatch(loadStocksContainer());
   }
