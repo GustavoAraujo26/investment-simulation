@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../state/app.state';
 import { addTitle } from '../../state/title/title.actions';
@@ -19,6 +19,10 @@ import { selectWallets } from '../../state/wallets/wallets.selector';
 import { changeWalletStatus, deleteWallet, loadWallets, saveWallet } from '../../state/wallets/wallets.actions';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { Observable } from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -37,17 +41,24 @@ import Swal from 'sweetalert2';
     CommonModule,
     MatTooltipModule,
     MatButtonModule,
+    MatExpansionModule,
+    MatListModule
   ]
 })
 export class WalletDashboardComponent implements AfterViewInit {
   displayedColumns = ["title", "observation", "active", "actions"];
   dataSource: MatTableDataSource<Wallet> = new MatTableDataSource();
+  obs: Observable<Wallet[]> | null = null;
+  isMobile: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router,
+    private deviceService: DeviceDetectorService, private cd: ChangeDetectorRef
+  ) {
     this.store.dispatch(addTitle({ currentTitle: 'Lista de carteiras de investimentos' }));
+    this.isMobile = deviceService.isMobile();
   }
 
   ngAfterViewInit() {
@@ -56,6 +67,8 @@ export class WalletDashboardComponent implements AfterViewInit {
 
     this.store.select(selectWallets).subscribe(value => this.updateDataSource(value));
     this.store.dispatch(loadWallets());
+
+    this.cd.detectChanges();
   }
 
   applyFilter(event: Event) {
@@ -116,5 +129,9 @@ export class WalletDashboardComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(stocks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    if (this.isMobile){
+      this.obs = this.dataSource.connect();
+    }
   }
 }
