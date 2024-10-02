@@ -1,28 +1,27 @@
 @if (isMobile){
   <div class="simulation-table-container">
-    <mat-accordion class="example-headers-align">
-      @for (row of dataSource.data; track row) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{row.stock.code}}
-            </mat-panel-title>
-            <mat-panel-description *ngIf="row.stock.percentage !== null">
-              {{row.stock.percentage / 100 | percent : '1.2-2'}}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+    <mat-accordion *ngFor="let row of obs | async; let i = index">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{row.stock.code}}
+          </mat-panel-title>
+          <mat-panel-description *ngIf="row.stock.percentage !== null">
+            {{row.stock.percentage / 100 | percent : '1.2-2'}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-          <app-stock-code-display [logo]="row.stock.logo!" logoHeight="50"
-                  [code]="row.stock.code" [name]="row.stock.name" [type]="row.stock.type"></app-stock-code-display>
+        <app-stock-code-display [logo]="row.stock.logo!" logoHeight="50"
+                [code]="row.stock.code" [name]="row.stock.name" [type]="row.stock.type"></app-stock-code-display>
 
-          <div style="text-align: center;">
-            <h3 class="mdl-color-text--white">Quantidade: <b>{{row.quantity}}</b></h3>
-            <h3 class="mdl-color-text--white">Preço: <b>{{row.price | currency : 'BRL'}}</b></h3>
-          </div>
+        <div style="text-align: center;">
+          <h3 class="mdl-color-text--white">Quantidade: <b>{{row.quantity}}</b></h3>
+          <h3 class="mdl-color-text--white">Preço: <b>{{row.price | currency : 'BRL'}}</b></h3>
+        </div>
 
-        </mat-expansion-panel>
-      }
+      </mat-expansion-panel>
     </mat-accordion>
+    <br/>
   </div>
 }
 @else{
@@ -56,5 +55,5 @@
       </tr>
     </table>
   </div>
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of stocks"></mat-paginator>
 }
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of stocks"></mat-paginator>

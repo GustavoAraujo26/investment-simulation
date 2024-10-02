@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { StockTypeChipComponent } from '../stock-type-chip/stock-type-chip.component';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-simulation-table',
@@ -42,12 +43,15 @@ export class SimulationTableComponent implements OnChanges {
 
   displayedColumns = ['stock', 'percentage', 'percentage', 'quantity'];
   dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
+  obs: Observable<SimulationStock[]> | null = null;
 
   isMobile: boolean = false;
 
-  constructor(private deviceService: DeviceDetectorService) {
+  constructor(private deviceService: DeviceDetectorService, private cd: ChangeDetectorRef) {
     this.isMobile = deviceService.isMobile();
-    this.updateDataSource(this.stocks);
+    if (!this.isMobile){
+      this.updateDataSource(this.stocks);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges){
@@ -65,9 +69,20 @@ export class SimulationTableComponent implements OnChanges {
     });
   }
 
+  ngAfterViewInit() {
+    if (this.isMobile){
+      this.dataSource.paginator = this.paginator;
+      this.cd.detectChanges();
+    }
+  }
+
   updateDataSource(stocks: SimulationStock[]) {
     this.dataSource = new MatTableDataSource(stocks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    if (this.isMobile){
+      this.obs = this.dataSource.connect();
+    }
   }
 }
