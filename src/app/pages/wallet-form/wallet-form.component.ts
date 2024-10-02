@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,6 +35,9 @@ import { Wallet } from '../../models/wallet/wallet';
 import { v4 as uuidv4 } from 'uuid';
 import { loadWallets, saveWallet } from '../../state/wallets/wallets.actions';
 import { selectWallets } from '../../state/wallets/wallets.selector';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { Observable } from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-wallet-form',
@@ -63,7 +66,8 @@ import { selectWallets } from '../../state/wallets/wallets.selector';
     SaveButtonComponent,
     TableActionsComponent,
     CurrencyMaskModule,
-    NgxMaskDirective
+    NgxMaskDirective,
+    MatExpansionModule
   ],
   standalone: true,
   providers: [
@@ -74,6 +78,7 @@ export class WalletFormComponent implements AfterViewInit {
   displayedColumns = ['code', 'percentage', 'actions'];
   dataSource: MatTableDataSource<WalletStock> = new MatTableDataSource();
   allStocks: OptionStock[] = [];
+  obs: Observable<WalletStock[]> | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -83,6 +88,7 @@ export class WalletFormComponent implements AfterViewInit {
   title: string = '';
   selectedWalletStock: WalletStock | null = null;
   stockPrice: number | null = null;
+  isMobile: boolean = false;
 
   wallet: Wallet = {
     id: uuidv4(),
@@ -93,10 +99,12 @@ export class WalletFormComponent implements AfterViewInit {
   };
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>,
-    public dialog: MatDialog, private router: Router
+    public dialog: MatDialog, private router: Router, private deviceService: DeviceDetectorService,
+    private cd: ChangeDetectorRef
   ) {
     this.getCurrentId();
     this.store.dispatch(addTitle({ currentTitle: this.title }));
+    this.isMobile = deviceService.isMobile();
   }
 
   ngAfterViewInit() {
@@ -250,6 +258,10 @@ export class WalletFormComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(stocks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    if (this.isMobile){
+      this.obs = this.dataSource.connect();
+    }
   }
 
   checkStockInDataSource(code: string): number {

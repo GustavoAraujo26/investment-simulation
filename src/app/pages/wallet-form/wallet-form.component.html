@@ -87,37 +87,67 @@
       <mat-card-content>
         <mat-divider class="global-divider"></mat-divider>
         <section class="wallet-container" tabindex="0">
-          <table mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="code">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo</th>
-              <td mat-cell *matCellDef="let row">
-                <app-stock-code-display [logo]="row.logo!" logoHeight="50"
-                  [code]="row.code" [name]="row.name" [type]="row.type"></app-stock-code-display>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="percentage">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentagem</th>
-              <td mat-cell *matCellDef="let row">
-                {{row.percentage / 100 | percent : '1.2-2'}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let row">
-                <app-table-actions editTooltip="Editar do ativo da carteira"
-                                   deleteTooltip="Apagar ativo da carteira"
-                                   [identifier]="row.code"
-                                   (onEdit)="editSelectedStock(row.code)"
-                                   (onDelete)="deleteSelectedStock(row.code)"></app-table-actions>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          @if (isMobile){
+            <br/>
+            <mat-accordion *ngFor="let row of obs | async; let i = index">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <img alt="row.name" class="option-stock-img" [src]="row.logo" height="25" />
+                    {{row.code}}
+                  </mat-panel-title>
+                  <mat-panel-description *ngIf="row.percentage !== null">
+                    {{row.percentage / 100 | percent : '1.2-2'}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
 
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell text-center" colspan="3">Nenhum ativo encontrado!</td>
-            </tr>
-          </table>
+                <app-stock-code-display [logo]="row.logo!" logoHeight="50"
+                        [code]="row.code" [name]="row.name" [type]="row.type"></app-stock-code-display>
+
+                <div style="text-align: center;">
+                  <app-table-actions editTooltip="Editar do ativo da carteira"
+                                     deleteTooltip="Apagar ativo da carteira"
+                                     [identifier]="row.code"
+                                     (onEdit)="editSelectedStock(row.code)"
+                                     (onDelete)="deleteSelectedStock(row.code)"></app-table-actions>
+                </div>
+
+              </mat-expansion-panel>
+            </mat-accordion>
+          }
+          @else {
+            <table mat-table [dataSource]="dataSource" matSort>
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo</th>
+                <td mat-cell *matCellDef="let row">
+                  <app-stock-code-display [logo]="row.logo!" logoHeight="50"
+                    [code]="row.code" [name]="row.name" [type]="row.type"></app-stock-code-display>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="percentage">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Porcentagem</th>
+                <td mat-cell *matCellDef="let row">
+                  {{row.percentage / 100 | percent : '1.2-2'}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Ações</th>
+                <td mat-cell *matCellDef="let row">
+                  <app-table-actions editTooltip="Editar do ativo da carteira"
+                                     deleteTooltip="Apagar ativo da carteira"
+                                     [identifier]="row.code"
+                                     (onEdit)="editSelectedStock(row.code)"
+                                     (onDelete)="deleteSelectedStock(row.code)"></app-table-actions>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" colspan="3">Nenhum ativo encontrado!</td>
+              </tr>
+            </table>
+          }
         </section>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
       </mat-card-content>
