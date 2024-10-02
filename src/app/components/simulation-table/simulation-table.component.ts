@@ -7,6 +7,11 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { StockCodeDisplayComponent } from '../stock-code-display/stock-code-display.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { SimulationStock } from '../../models/simulation/simulation-stock';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { MatIconModule } from '@angular/material/icon';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { StockTypeChipComponent } from '../stock-type-chip/stock-type-chip.component';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-simulation-table',
@@ -21,8 +26,11 @@ import { SimulationStock } from '../../models/simulation/simulation-stock';
     CurrencyPipe,
     FormsModule,
     StockCodeDisplayComponent,
-    CurrencyMaskModule
-  ]
+    CurrencyMaskModule,
+    MatIconModule,
+    StockTypeChipComponent,
+    MatExpansionModule
+  ],
 })
 export class SimulationTableComponent implements OnChanges {
 
@@ -32,10 +40,13 @@ export class SimulationTableComponent implements OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns = ['stock', 'price', 'percentage', 'quantity'];
+  displayedColumns = ['stock', 'percentage', 'percentage', 'quantity'];
   dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
 
-  constructor() {
+  isMobile: boolean = false;
+
+  constructor(private deviceService: DeviceDetectorService) {
+    this.isMobile = deviceService.isMobile();
     this.updateDataSource(this.stocks);
   }
 

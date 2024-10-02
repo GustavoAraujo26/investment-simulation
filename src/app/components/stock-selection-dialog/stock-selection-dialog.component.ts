@@ -13,41 +13,6 @@ import { Store } from '@ngrx/store';
 import { selectStocksContainer } from '../../state/stocks-container/stocks-container.selector';
 import { loadStocksContainer } from '../../state/stocks-container/stocks-container.actions';
 
-const optionStocks: OptionStock[] = [
-  {
-    code: 'FNAM11',
-    name: 'FINAM CI *',
-    price: 0.46,
-    logo: 'https://s3-symbol-logo.tradingview.com/amazonia-on-es--big.svg',
-    sector: 'Teste',
-    type: 'stock'
-  },
-  {
-    code: 'B3SA3',
-    name: 'B3',
-    price: 12.13,
-    logo: 'https://s3-symbol-logo.tradingview.com/b3-on-nm--big.svg',
-    sector: 'Teste',
-    type: 'bdr'
-  },
-  {
-    code: 'AZUL4',
-    name: 'AZUL PN',
-    price: 4.95,
-    logo: 'https://s3-symbol-logo.tradingview.com/azul--big.svg',
-    sector: 'Teste',
-    type: 'fund'
-  },
-  {
-    code: 'CVCB3',
-    name: 'CVC BRASIL',
-    price: 2.08,
-    logo: 'https://s3-symbol-logo.tradingview.com/cvc-brasil-on-nm--big.svg',
-    sector: 'Teste',
-    type: 'stock'
-  }
-];
-
 @Component({
   selector: 'app-stock-selection-dialog',
   templateUrl: './stock-selection-dialog.component.html',
