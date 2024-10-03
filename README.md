@@ -23,13 +23,13 @@ A API da Brapi possui um plano gratuito até então, o qual possui algumas limit
 
 Dessa forma, foi necessário pensar em uma estratégia para minimizaro impacto dessas travas.
 
-### Funcionamento
+> ### Funcionamento
 
 Como citado acima, devido a limitação de quantidade de requisições por mês, foi necessário pensar em uma forma de armazenar essas informações. Além disso, devido a custos, foi descartada a criação de uma API com um banco de dados para persistência dessas informações, visto que o projeto tinha o intuito de ser simples, rápido e "gratuito".
 
 Sendo assim, a primeira vez que o usuário realiza o acesso ao site no dia, o sistema realiza chamada na API da Brapi, captura os dados e salva no LocalStorage do navegador. Caso o usuário acesse novamente o site durante o dia, em vez de realizar nova chamda na API da Brapi, o sistema consulta as informações já salvas no LocalStorage.
 
-### Funcionalidades
+> ### Funcionalidades
 
 Como funcionalidades do sistema temos:
 - Criação/Edição/Deleção de uma carteira de investimentos;
@@ -38,7 +38,7 @@ Como funcionalidades do sistema temos:
 
 Além disso na Home Page existe um carrossel com o último preço dos ativos.
 
-### Hospedagem
+> ### Hospedagem
 
 Devido a necessidade de não gastar com hospedagem do site, realizei uma breve pesquisa e encontrei a possibilidade de utilizar o [GitHub Pages](https://pages.github.com/).
 
@@ -48,7 +48,7 @@ Porém vale ressaltar que ele possui limitação de hospedagem para sites "está
 
 [Clique aqui](https://gustavoaraujo26.github.io/investment-simulation/home) para acessar o site hospedado.
 
-### Pacotes utilizados
+> ### Pacotes utilizados
 
 Segue abaixo lista de pacotes utilizados na construção do site.
 
