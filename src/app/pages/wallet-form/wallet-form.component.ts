@@ -89,6 +89,7 @@ export class WalletFormComponent implements AfterViewInit {
   selectedWalletStock: WalletStock | null = null;
   stockPrice: number | null = null;
   isMobile: boolean = false;
+  step: number | null = null;
 
   wallet: Wallet = {
     id: uuidv4(),
@@ -110,6 +111,11 @@ export class WalletFormComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.store.select(selectStocksContainer).subscribe(value => this.allStocks = value.stocks);
     this.store.dispatch(loadStocksContainer());
+
+    if (this.isMobile){
+      this.dataSource.paginator = this.paginator;
+      this.cd.detectChanges();
+    }
   }
 
   getCurrentId(){
@@ -132,6 +138,8 @@ export class WalletFormComponent implements AfterViewInit {
           return;
         }
 
+        this.isMobile = this.deviceService.isMobile();
+
         this.wallet = {
           id: currentWallet.id,
           active: currentWallet.active,
@@ -140,6 +148,7 @@ export class WalletFormComponent implements AfterViewInit {
           stocks: [...currentWallet.stocks]
         };
         this.updateDataSourceStocks(this.wallet.stocks);
+        this.step = null;
       });
     }
   }
@@ -354,5 +363,9 @@ export class WalletFormComponent implements AfterViewInit {
     }
 
     return true;
+  }
+
+  expandPanel(index: number) {
+    this.step = index;
   }
 }

@@ -42,6 +42,7 @@ export class StockSelectionDialogComponent implements AfterViewInit {
   dataSource: MatTableDataSource<OptionStock>;
   obs: Observable<OptionStock[]> | null = null;
   isMobile: boolean = false;
+  step: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -82,5 +83,9 @@ export class StockSelectionDialogComponent implements AfterViewInit {
 
   selectStock(stock: OptionStock) {
     this.dialogRef.close(stock);
+  }
+
+  expandPanel(index: number) {
+    this.step = index;
   }
 }

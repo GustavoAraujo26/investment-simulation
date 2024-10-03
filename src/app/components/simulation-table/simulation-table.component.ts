@@ -45,6 +45,8 @@ export class SimulationTableComponent implements OnChanges {
   dataSource: MatTableDataSource<SimulationStock> = new MatTableDataSource();
   obs: Observable<SimulationStock[]> | null = null;
 
+  step: number | null = null;
+
   isMobile: boolean = false;
 
   constructor(private deviceService: DeviceDetectorService, private cd: ChangeDetectorRef) {
@@ -57,6 +59,7 @@ export class SimulationTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges){
     if (changes['walletId'] !== null && changes['walletId'] !== undefined && changes['walletId'].previousValue !== this.walletId){
       this.updateDataSource(this.stocks);
+      this.step = null;
       return;
     }
 
@@ -84,5 +87,9 @@ export class SimulationTableComponent implements OnChanges {
     if (this.isMobile){
       this.obs = this.dataSource.connect();
     }
+  }
+
+  expandPanel(index: number) {
+    this.step = index;
   }
 }

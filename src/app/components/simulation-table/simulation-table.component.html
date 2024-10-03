@@ -1,11 +1,10 @@
 @if (isMobile){
   <div class="simulation-table-container">
     <mat-accordion *ngFor="let row of obs | async; let i = index">
-      <mat-expansion-panel>
+      <mat-expansion-panel (click)="expandPanel(i)" [expanded]="step === i">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <img alt="row.name" class="option-stock-img" [src]="row.stock.logo" height="25" />
-            &nbsp;
+            <img alt="row.name" class="option-stock-img" [src]="row.stock.logo" height="25" style="margin-right: 10px;" />
             {{row.stock.code}}
           </mat-panel-title>
           <mat-panel-description *ngIf="row.stock.percentage !== null">

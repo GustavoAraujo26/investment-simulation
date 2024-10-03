@@ -21,7 +21,7 @@
     <div class="wallet-table-container">
       @if (isMobile){
         <mat-accordion *ngFor="let row of obs | async; let i = index">
-          <mat-expansion-panel>
+          <mat-expansion-panel (click)="expandPanel(i)" [expanded]="step === i">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <mat-icon class="icon-clickable" fontIcon="lock_open"
@@ -39,23 +39,6 @@
             <p style="text-align: justify;">
               {{row.observation}}
             </p>
-
-            <!-- <div style="overflow-y: auto; max-height: 300px;">
-              <mat-list>
-                <mat-list-item lines="3">
-                  <mat-list-item lines="3">
-                    <span matListItemTitle>Título</span>
-                    <span>
-                      {{row.title}}
-                    </span>
-                  </mat-list-item>
-                  <mat-list-item lines="3" *ngIf="row.observation !== null && row.observation !== undefined && row.observation !== ''">
-                    <span matListItemTitle>Observação</span>
-                    {{row.observation}}
-                  </mat-list-item>
-                </mat-list-item>
-              </mat-list>
-            </div> -->
 
             <div style="text-align: center;">
               <button mat-mini-fab color="secondary" aria-label="Simular" matTooltip="Ativar/Desativar"

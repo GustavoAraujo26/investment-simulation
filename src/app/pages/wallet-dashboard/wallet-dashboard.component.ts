@@ -50,6 +50,7 @@ export class WalletDashboardComponent implements AfterViewInit {
   dataSource: MatTableDataSource<Wallet> = new MatTableDataSource();
   obs: Observable<Wallet[]> | null = null;
   isMobile: boolean = false;
+  step: number | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -133,5 +134,9 @@ export class WalletDashboardComponent implements AfterViewInit {
     if (this.isMobile){
       this.obs = this.dataSource.connect();
     }
+  }
+
+  expandPanel(index: number) {
+    this.step = index;
   }
 }
