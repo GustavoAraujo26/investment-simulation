@@ -38,6 +38,8 @@ Como funcionalidades do sistema temos:
 
 Além disso na Home Page existe um carrossel com o último preço dos ativos.
 
+![Demonstracao](./demonstracao-simulador-investimentos.gif)
+
 > ### Hospedagem
 
 Devido a necessidade de não gastar com hospedagem do site, realizei uma breve pesquisa e encontrei a possibilidade de utilizar o [GitHub Pages](https://pages.github.com/).
