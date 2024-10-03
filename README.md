@@ -38,7 +38,7 @@ Como funcionalidades do sistema temos:
 
 Além disso na Home Page existe um carrossel com o último preço dos ativos.
 
-![Demonstracao](./demonstracao-simulador-investimentos.gif)
+![Demonstracao](./cc3322c2-0174-4f7a-a813-977fbd853f6e.gif)
 
 > ### Hospedagem
 
