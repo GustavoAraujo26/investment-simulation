@@ -64,3 +64,10 @@ Segue abaixo lista de pacotes utilizados na construção do site.
 - rxjs 7.8.0
 - sweetalert2 11.4.0
 - uuid 10.0.0
+
+> ### Possíveis evoluções
+
+Dentre possíveis evoluções que poderiam ser feitas posteriormente, destaco:
+
+- Inclusão de ativos de outras bolsas como americana e europeia;
+- Dashboard para pesquisa de ações;
